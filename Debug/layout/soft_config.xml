@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="soft_config" text="SOFT_CONFIG" size="600,560">
+    <widgetlist  id="edit_list" rel1="0.0,0" rel2="1.0,1.0" offset1="0,0" offset2="0,-48">
+      <widget size="0,240">
+        <listctrl  id="disk_list" rel1="0.0,0" rel2="1.0,1.0" offset1="2,0" offset2="-2,0" >
+          <column text="DISK_NAME" width="120" format="left" sort_type="text"/>
+          <column text="TOTAL_SPACE_MB" width="150" format="left" sort_type="float"/>
+          <column text="FREE_SPACE_MB" width="150" format="left" sort_type="float"/>
+        </listctrl>
+      </widget>
+      <widget size="0,24">
+        <static  id="record_duration_text" text="RECORD_DURATION" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
+        <combobox id="record_duration_combobox" rel1="0.5,0" rel2="1.0,1.0" offset1="0,0" offset2="-20,0">
+        </combobox>
+      </widget>
+      <widget size="0,24">
+        <static  id="leave_space_text" text="LEAVE_SPACE" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
+        <edit  id="leave_space_edit" rel1="0.5,0" rel2="1.0,1.0"  offset1="0,0" offset2="-20,0"/>
+      </widget>
+      <!--<widget size="0,24">
+        <static  id="record_preserve_time_text" text="RECORD_PRESERVE_TIME" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
+        <edit  id="record_preserve_time_edit" rel1="0.5,0" rel2="1.0,1.0"  offset1="0,0" offset2="-20,0"/>
+      </widget>-->
+      <widget size="0,24">
+        <static  id="delete_record_size_text" text="DELETE_RECORD_SIZE" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
+        <edit  id="delete_record_size_edit" rel1="0.5,0" rel2="1.0,1.0"  offset1="0,0" offset2="-20,0"/>
+      </widget>
+      <widget size="0,24">
+        <static  id="snapshot_path_text" text="SNAPSHOT_PATH" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
+        <folderedit  id="snapshot_path_edit" rel1="0.5,0" rel2="1.0,1.0"  offset1="0,0" offset2="-20,0"/>
+      </widget>
+    </widgetlist>
+    <widget id="oper_pane"  rel1="0.0,1.0" rel2="1.0,1.0" offset1="0,-48" offset2="0,0">
+      <button  id="ok" text="OK" rel1="0.5,1.0" rel2="0.5,1.0" offset1="-120,-36" offset2="-40,-12"/>
+      <button  id="cancel" text="CANCEL" rel1="0.5,1.0" rel2="0.5,1.0" offset1="40,-36" offset2="120,-12"/>
+    </widget>
+  </group> 
+</UI>

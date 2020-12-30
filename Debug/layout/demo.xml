@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="demo" text="QYFC-DEMO" size="1024,760">
+    <static  id="text" text="STATIC_TEXT" rel1="0.0,0" rel2="0.0,0.0" offset1="20,20" offset2="100,44" />
+    <edit  id="edit1" leftto="text RIGHT" offset1="20,20" offset2="200,44" />
+    <edit  id="edit2"   leftto="edit1 RIGHT" offset1="20,20" offset2="200,44" />
+	<button  id="button1"  text="ENABLE_BUTTON" leftto="edit2 RIGHT" offset1="20,20" offset2="200,44" />
+	<button  id="button2"  text="DISABLE_BUTTON" leftto="button1 RIGHT" offset1="20,20" offset2="200,44" />
+	<folderedit  id="folderedit"   leftto="text LEFT" topto="text BOTTOM" offset1="0,20" offset2="300,44" />
+	<combobox  id="combobox"   leftto="folderedit RIGHT" topto="folderedit TOP" offset1="20,0" offset2="200,24" />
+	<datetime  id="datetime"   leftto="combobox RIGHT" topto="combobox TOP" offset1="20,0" offset2="200,24" />
+	<switch  id="switch"   leftto="datetime RIGHT" topto="datetime TOP" offset1="20,0" offset2="60,24" />
+	<ip  id="ip"   leftto="switch RIGHT" topto="switch TOP" offset1="20,0" offset2="180,24" />
+	
+	<toolbar  id="toolbar"   show_text="false"  border="0" leftto="folderedit LEFT" topto="folderedit BOTTOM" offset1="20,20" offset2="800,60" >
+	  <image id="0" source="monitor.png" />
+      <image id="1" source="tool_ptzbar.png" />
+      <image id="2" source="tool_log.png" />
+      <image id="3" source="tool_user.png" />
+      <image id="4" source="tool_device_config.png" />
+      <image id="5" source="tool_local_config.png" />
+      <image id="6" source="tool_replay.png" />
+      <item id="0" text="toolbar item 1" image="0" align="right"/>
+      <item id="1" text="toolbar item 2" image="1" align="right"/>
+      <item id="2" text="toolbar item 3" image="2" align="right"/>
+      <item id="3" text="toolbar item 4" image="3" align="right"/>
+      <item id="4" text="toolbar item 5" image="4" align="right"/>
+      <item id="5" text="toolbar item 6" image="5" align="right"/>
+	   </toolbar>
+	   <button  id="popup_menu"  text="POPUP_MENU" leftto="toolbar RIGHT" topto="toolbar TOP" offset1="20,0" offset2="200,24" />
+	   <tree id="tree" leftto="GROUP LEFT" topto="toolbar BOTTOM" bottomto="GROUP BOTTOM"  offset1="1,20"  offset2="200,-1" drag="false" border="1" item_height="32">
+        <image id="0" source="ipc_online.png" />
+        <image id="1" source="ipc_offline.png" />
+        <image id="2" source="ipc_playing.png" />
+      </tree>
+	<listctrl  id="list" topto="tree TOP"  bottomto="GROUP BOTTOM"  leftto="tree RIGHT"  offset1="1,0" offset2="300,-1">
+      <column text="column 1" width="80" format="left" />
+	  <column text="column 2" width="100" format="left" />
+	  <column text="column 3" width="100" format="left" />
+    </listctrl>
+	<datetable  id="datetable"   topto="list TOP"    leftto="list RIGHT"  rightto="GROUP RIGHT" offset1="1,0" offset2="-1,300" />
+</group> 
+</UI>

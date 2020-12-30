@@ -1,0 +1,13 @@
+QYFC-DEMO,qyfc demo
+LANGUAGE,语言
+ENGLISH,English
+CHINESE,中文
+RELOGIN,重新登录
+ABOUT,关于
+STATIC_TEXT,静态文本
+ENABLE_BUTTON,可用按钮
+DISABLE_BUTTON,禁用按钮
+POPUP_MENU,弹出菜单
+toolbar item 1,工具条节点1
+column 1,第一列
+column 2,第二列

@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug_static|Win32">
+      <Configuration>debug_static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release_static|Win32">
+      <Configuration>release_static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C12D1AA1-0796-4BAE-8C8C-C34E836C31A5}</ProjectGuid>
+    <RootNamespace>QYUI</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>QYFC</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='release_static|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug_static|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+    <NuGetPackageImportStamp>9269775b</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>../obj/$(PlatformTarget)/$(ProjectName)/$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug_static|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>../obj/$(PlatformTarget)/$(ProjectName)/$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)_s</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>../obj/$(PlatformTarget)/$(ProjectName)/$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release_static|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>../obj/$(PlatformTarget)/$(ProjectName)/$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_s</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;QYUI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImportLibrary>../lib/x86/$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>../lib/x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_static|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;__BUILD_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImportLibrary>../lib/x86/$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>../lib/x86;C:\tools\ThirdPartLibrary\lib</AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <OutputFile>../lib/x86/$(TargetName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;QYUI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AssemblerOutput>All</AssemblerOutput>
+      <AdditionalIncludeDirectories>C:\tools\ThirdPartLibrary\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImportLibrary>../lib/x86/$(TargetName).lib</ImportLibrary>
+      <GenerateMapFile>true</GenerateMapFile>
+      <AdditionalLibraryDirectories>../lib/x86;C:\tools\ThirdPartLibrary\lib</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release_static|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;__BUILD_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AssemblerOutput>All</AssemblerOutput>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImportLibrary>../lib/x86/$(TargetName).lib</ImportLibrary>
+      <GenerateMapFile>true</GenerateMapFile>
+      <AdditionalLibraryDirectories>../lib/x86;</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <Lib>
+      <OutputFile>../lib/x86/$(TargetName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ConselLog.cpp" />
+    <ClCompile Include="QYEvent.cpp" />
+    <ClCompile Include="QYImageManager.cpp" />
+    <ClCompile Include="QYIScroll.cpp" />
+    <ClCompile Include="QYLanguage.cpp" />
+    <ClCompile Include="QYMessageBox.cpp" />
+    <ClCompile Include="QYPropertyList.cpp" />
+    <ClCompile Include="QYApp.cpp" />
+    <ClCompile Include="QYButton.cpp" />
+    <ClCompile Include="QYButtonListCtrl.cpp" />
+    <ClCompile Include="QYCaptionCtrl.cpp" />
+    <ClCompile Include="QYCheckButton.cpp" />
+    <ClCompile Include="QYColorList.cpp" />
+    <ClCompile Include="QYColorListCtrl.cpp" />
+    <ClCompile Include="QYComboBox.cpp" />
+    <ClCompile Include="QYComboLBox.cpp" />
+    <ClCompile Include="QYCsvFile.cpp" />
+    <ClCompile Include="QYCtrlList.cpp" />
+    <ClCompile Include="QYCtrlListDlg.cpp" />
+    <ClCompile Include="QYDataExchange.cpp" />
+    <ClCompile Include="QYDateCtrl.cpp" />
+    <ClCompile Include="QYDateTable.cpp" />
+    <ClCompile Include="QYDateTime.cpp" />
+    <ClCompile Include="QYDateTimeCtrl.cpp" />
+    <ClCompile Include="QYDC.cpp" />
+    <ClCompile Include="QYDescribeTable.cpp" />
+    <ClCompile Include="QYDialog.cpp" />
+    <ClCompile Include="QYDPI.cpp" />
+    <ClCompile Include="QYDragWindow.cpp" />
+    <ClCompile Include="QYDropList.cpp" />
+    <ClCompile Include="QYDropWindowPool.cpp" />
+    <ClCompile Include="QYDwm.cpp" />
+    <ClCompile Include="QYEdit.cpp" />
+    <ClCompile Include="QYFileStudio.cpp" />
+    <ClCompile Include="QYFolderEdit.cpp" />
+    <ClCompile Include="QYHeaderCtrl.cpp" />
+    <ClCompile Include="QYHeapBuffer.cpp" />
+    <ClCompile Include="QYImageList.cpp" />
+    <ClCompile Include="QYIPAddress.cpp" />
+    <ClCompile Include="QYIPCtrl.cpp" />
+    <ClCompile Include="QYLinearBitmap.cpp" />
+    <ClCompile Include="QYListBox.cpp" />
+    <ClCompile Include="QYListCtrl.cpp" />
+    <ClCompile Include="QYMainWindow.cpp" />
+    <ClCompile Include="QYMD5.cpp" />
+    <ClCompile Include="QYMenu.cpp" />
+    <ClCompile Include="QYMessageMap.cpp" />
+    <ClCompile Include="QYMutex.cpp" />
+    <ClCompile Include="QYPagePane.cpp" />
+    <ClCompile Include="QYPicture.cpp" />
+    <ClCompile Include="QYPoint.cpp" />
+    <ClCompile Include="QYProgressCtrl.cpp" />
+    <ClCompile Include="QYRadioButton.cpp" />
+    <ClCompile Include="QYRccodec.cpp" />
+    <ClCompile Include="QYRect.cpp" />
+    <ClCompile Include="QYRectBackground.cpp" />
+    <ClCompile Include="QYRelative.cpp" />
+    <ClCompile Include="QYScrollBar.cpp" />
+    <ClCompile Include="QYShadowBorder.cpp" />
+    <ClCompile Include="QYShellEx.cpp" />
+    <ClCompile Include="QYSize.cpp" />
+    <ClCompile Include="QYSizeBox.cpp" />
+    <ClCompile Include="QYSplitterCtrl.cpp" />
+    <ClCompile Include="QYSplitterCtrlManager.cpp" />
+    <ClCompile Include="QYSqlite3.cpp" />
+    <ClCompile Include="QYStatic.cpp" />
+    <ClCompile Include="QYString.cpp" />
+    <ClCompile Include="QYSwitchButton.cpp" />
+    <ClCompile Include="QYSysBox.cpp" />
+    <ClCompile Include="QYSysProcess.cpp" />
+    <ClCompile Include="QYTabCtrl.cpp" />
+    <ClCompile Include="QYTimeCtrl.cpp" />
+    <ClCompile Include="QYTimeTable.cpp" />
+    <ClCompile Include="QYToolBar.cpp" />
+    <ClCompile Include="QYToolTip.cpp" />
+    <ClCompile Include="QYTreeCtrl.cpp" />
+    <ClCompile Include="QYVersion.cpp" />
+    <ClCompile Include="QYWaitCursor.cpp" />
+    <ClCompile Include="QYWidget.cpp" />
+    <ClCompile Include="QYWidgetList.cpp" />
+    <ClCompile Include="QYWidgetListDialog.cpp" />
+    <ClCompile Include="QYWindow.cpp" />
+    <ClCompile Include="QYWindowShadow.cpp" />
+    <ClCompile Include="QYShortcutOperation.cpp" />
+    <ClCompile Include="QYXML.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="QYEvent.h" />
+    <ClInclude Include="QYImageManage.h" />
+    <ClInclude Include="QYImageManager.h" />
+    <ClInclude Include="QYIScroll.h" />
+    <ClInclude Include="QYLanguage.h" />
+    <ClInclude Include="QYPropertyList.h" />
+    <ClInclude Include="QYButtonListCtrl.h" />
+    <ClInclude Include="QYCaptionCtrl.h" />
+    <ClInclude Include="QYColorList.h" />
+    <ClInclude Include="QYColorListCtrl.h" />
+    <ClInclude Include="QYConselLog.H" />
+    <ClInclude Include="includedef.h" />
+    <ClInclude Include="QYApp.h" />
+    <ClInclude Include="QYButton.h" />
+    <ClInclude Include="QYCheckButton.h" />
+    <ClInclude Include="qycolor.h" />
+    <ClInclude Include="QYComboBox.h" />
+    <ClInclude Include="QYComboLBox.h" />
+    <ClInclude Include="QYCsvFile.h" />
+    <ClInclude Include="QYCtrlList.h" />
+    <ClInclude Include="QYCtrlListDlg.h" />
+    <ClInclude Include="QYDataExchange.h" />
+    <ClInclude Include="QYDateCtrl.h" />
+    <ClInclude Include="QYDateTable.h" />
+    <ClInclude Include="QYDateTime.h" />
+    <ClInclude Include="QYDateTimeCtrl.h" />
+    <ClInclude Include="QYDC.h" />
+    <ClInclude Include="qydefine.h" />
+    <ClInclude Include="QYDescribeTable.h" />
+    <ClInclude Include="QYDialog.h" />
+    <ClInclude Include="QYDPI.h" />
+    <ClInclude Include="QYDragWindow.h" />
+    <ClInclude Include="QYDropList.h" />
+    <ClInclude Include="QYDropWindowPool.h" />
+    <ClInclude Include="QYDwm.h" />
+    <ClInclude Include="QYEdit.h" />
+    <ClInclude Include="qyfc.h" />
+    <ClInclude Include="QYFileStudio.h" />
+    <ClInclude Include="QYFolderEdit.h" />
+    <ClInclude Include="QYHeaderCtrl.h" />
+    <ClInclude Include="QYHeapBuffer.h" />
+    <ClInclude Include="QYImageList.h" />
+    <ClInclude Include="QYIPAddress.h" />
+    <ClInclude Include="QYIPCtrl.h" />
+    <ClInclude Include="QYLinearBitmap.h" />
+    <ClInclude Include="QYListBox.h" />
+    <ClInclude Include="QYListCtrl.h" />
+    <ClInclude Include="QYMainWindow.h" />
+    <ClInclude Include="QYMD5.h" />
+    <ClInclude Include="QYMenu.h" />
+    <ClInclude Include="QYMessageBox.h" />
+    <ClInclude Include="QYMessageMap.h" />
+    <ClInclude Include="QYMutex.h" />
+    <ClInclude Include="QYPagePane.h" />
+    <ClInclude Include="QYpicture.h" />
+    <ClInclude Include="QYPoint.h" />
+    <ClInclude Include="QYProgressCtrl.h" />
+    <ClInclude Include="QYRadioButton.h" />
+    <ClInclude Include="QYRccodec.h" />
+    <ClInclude Include="QYRect.h" />
+    <ClInclude Include="QYRectBackground.h" />
+    <ClInclude Include="QYRelative.h" />
+    <ClInclude Include="QYScrollBar.h" />
+    <ClInclude Include="QYShadowBorder.h" />
+    <ClInclude Include="QYShellEx.h" />
+    <ClInclude Include="QYSize.h" />
+    <ClInclude Include="QYSizeBox.h" />
+    <ClInclude Include="QYSplitterCtrl.h" />
+    <ClInclude Include="QYSplitterCtrlManager.h" />
+    <ClInclude Include="QYSqlite3.h" />
+    <ClInclude Include="QYStatic.h" />
+    <ClInclude Include="QYString.h" />
+    <ClInclude Include="QYSwitchButton.h" />
+    <ClInclude Include="QYSysBox.h" />
+    <ClInclude Include="QYSysProcess.h" />
+    <ClInclude Include="QYTabCtrl.h" />
+    <ClInclude Include="QYTimeCtrl.h" />
+    <ClInclude Include="QYTimeTable.h" />
+    <ClInclude Include="QYToolBar.h" />
+    <ClInclude Include="QYToolTip.h" />
+    <ClInclude Include="QYTreeCtrl.h" />
+    <ClInclude Include="QYVersion.h" />
+    <ClInclude Include="QYWaitCursor.h" />
+    <ClInclude Include="QYWidget.h" />
+    <ClInclude Include="QYWidgetList.h" />
+    <ClInclude Include="QYWidgetListDialog.h" />
+    <ClInclude Include="QYWindow.h" />
+    <ClInclude Include="QYWindowShadow.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="QYShortcutOperation.h" />
+    <ClInclude Include="QYXML.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QYUI.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\MFCApplication1\shadow2.bmp" />
+    <Image Include="192.168.86.195_60-BC-EC_2016_04_11_15_49_48_27529590.bmp" />
+    <Image Include="mac_shadow_37.44px_1142413_easyicon.net副本.bmp" />
+    <Image Include="res\caption_bk.png" />
+    <Image Include="res\check_box_normal.png" />
+    <Image Include="res\check_box_selected.png" />
+    <Image Include="res\collapse.png" />
+    <Image Include="res\drag.png" />
+    <Image Include="res\expand.png" />
+    <Image Include="res\foder.png" />
+    <Image Include="res\folder.png" />
+    <Image Include="res\more.png" />
+    <Image Include="res\radio_box_normal.png" />
+    <Image Include="res\radio_box_select.png" />
+    <Image Include="res\shadow.png" />
+    <Image Include="res\shadow_bottom.png" />
+    <Image Include="res\shadow_left.png" />
+    <Image Include="res\shadow_left_bottom.png" />
+    <Image Include="res\shadow_left_top.png" />
+    <Image Include="res\shadow_right.png" />
+    <Image Include="res\shadow_right_bottom.png" />
+    <Image Include="res\shadow_right_top.png" />
+    <Image Include="res\shadow_top.png" />
+    <Image Include="res\skip_end_page.png" />
+    <Image Include="res\skip_first_page.png" />
+    <Image Include="res\skip_last_page.png" />
+    <Image Include="res\skip_next_page.png" />
+    <Image Include="res\small_shadow.png" />
+    <Image Include="res\small_shadow_bottom.png" />
+    <Image Include="res\small_shadow_left.png" />
+    <Image Include="res\small_shadow_left_bottom.png" />
+    <Image Include="res\small_shadow_left_top.png" />
+    <Image Include="res\small_shadow_right.png" />
+    <Image Include="res\small_shadow_right_bottom.png" />
+    <Image Include="res\small_shadow_right_top.png" />
+    <Image Include="res\small_shadow_top.png" />
+    <Image Include="res\switch-OFF.png" />
+    <Image Include="res\switch-ON.png" />
+    <Image Include="res\warning.png" />
+    <Image Include="shadow.bmp" />
+    <Image Include="shadow.png" />
+    <Image Include="shadow2.bmp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

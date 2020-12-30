@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="system">
+      <item id="relogin" text="RELOGIN" />
+      <item id="language" text="LANGUAGE"  >
+        <item id="english" text="ENGLISH"/>
+        <item id="chinese" text="CHINESE" />
+      </item> 
+      <item id="about" text="ABOUT"/>
+  </group>
+  <group  id="o">
+    <item id="oper 1" text="oper1" />
+	<item id="oper 2" text="oper2" />
+  </group>
+
+</UI>

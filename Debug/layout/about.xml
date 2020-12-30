@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="about" text="ABOUT" size="400,120">
+    <button  id="app_icon" image="app.png" rel1="0.0,0.0" rel2="0.2,1.0" />
+    <static  id="version_text" rel1="0.2,0.0" rel2="1.0,0.5"/>
+    <static  id="cp_text" rel1="0.2,0.0" rel2="1.0,1.0"/>
+</group> 
+</UI>

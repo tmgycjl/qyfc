@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="login" text="LOGIN" size="480,320">
+    <static  id="user_text" text="USER_NAME" rel1="0.05,0" rel2="0.5,0.0" offset1="0,20" offset2="0,44" />
+    <edit  id="user_edit" rel1="0.5,0" rel2="0.95,0" offset1="0,20" offset2="0,44" />
+    <static  id="pin_text" text="PIN" relto="user_text" offset1="0,40" offset2="0,40" />
+    <edit  id="pin_edit"  password="true" relto="user_edit" offset1="0,40" offset2="0,40" />
+    <static  id="remember_pin_text" text="REMEMBER_PIN" relto="pin_text" offset1="0,40" offset2="0,40" />
+    <switch  id="remember_pin"  relto="pin_edit" offset1="0,40" offset2="0,40" />
+    <static  id="auto_login_text" text="AUTO_LOGIN" relto="remember_pin_text" offset1="0,48" offset2="0,40" />
+    <switch  id="auto_login"  relto="remember_pin" offset1="0,40" offset2="0,40" />
+    <widget id="oper_pane" color="51,51,51" rel1="0.0,1.0" rel2="1.0,1.0" offset1="0,-48" offset2="0,0">
+      <button  id="login" text="LOGIN" rel1="0.5,1.0" rel2="0.5,1.0" offset1="-120,-36" offset2="-40,-12"/>
+      <button  id="cancel" text="CANCEL" rel1="0.5,1.0" rel2="0.5,1.0" offset1="40,-36" offset2="120,-12"/>
+    </widget>
+</group> 
+</UI>

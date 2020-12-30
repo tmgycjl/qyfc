@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="ptz_pane" type="child" text="" size="0,0">
+    <widgetlist  id="edit_list" rel1="0.0,0" rel2="1.0,1.0">
+      <widget id="1" size="150,150">
+        <button  id="ptz_left" image="ptz_left.png" rel1="0.0,0.34" rel2="0.32,0.66" />
+        <button  id="ptz_up" image="ptz_up.png" rel1="0.34,0.0" rel2="0.66,0.32" />
+        <button  id="ptz_right" image="ptz_right.png" rel1="0.68,0.34" rel2="1.0,0.66" />
+        <button  id="ptz_down" image="ptz_down.png" rel1="0.34,0.68" rel2="0.66,1.0" />
+      </widget>
+      <widget id="2" size="0,32">
+        <button  id="zoom_decrease" image="ptz_reduce.png" rel1="0.1,0" rel2="0.3,1" />
+        <static  id="zoom_text" text="PTZ_ZOOM" align="center" rel1="0.3,0" rel2="0.7,1" />
+        <button  id="zoom_increase" image="ptz_increase.png" rel1="0.7,0" rel2="0.9,1" />
+      </widget>
+      <widget id="3" size="0,32">
+        <button  id="focus_decrease" image="ptz_reduce.png" rel1="0.1,0" rel2="0.3,1" />
+        <static  id="focus_text" text="PTZ_FOCUS" align="center" rel1="0.3,0" rel2="0.7,1" />
+        <button  id="focus_increase" image="ptz_increase.png" rel1="0.7,0" rel2="0.9,1" />
+      </widget>
+      <widget id="4" size="0,24">
+          <static  id="ptz_speed_text" text="PTZ_SPEED" rel1="0.05,0" rel2="0.7,1.0" />
+          <combobox  id="ptz_speed" rel1="0.7,0" rel2="0.95,1.0" />
+      </widget>
+       <widget id="5" size="0,24">
+          <static  id="ptz_preset_pos_text" text="PTZ_PRESET_POS" rel1="0.05,0" rel2="0.7,1.0" />
+          <edit  id="ptz_preset_pos" rel1="0.7,0" rel2="0.95,1.0" />
+      </widget>
+      <widget id="6" size="0,24">
+        <button  id="ptz_preset_set"  text="PTZ_PRESET_SET" rel1="0.1,0" rel2="0.34,1" />
+        <button  id="ptz_preset_call"   text="PTZ_PRESET_CALL" rel1="0.38,0" rel2="0.62,1" />
+        <button  id="ptz_preset_clear"  text="PTZ_PRESET_CLEAR" rel1="0.66,0" rel2="0.9,1" />
+      </widget>
+    </widgetlist>
+</group> 
+</UI>

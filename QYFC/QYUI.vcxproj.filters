@@ -1,0 +1,682 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="QYApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYMainWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYMessageMap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYRect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYPoint.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDC.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDataExchange.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYEdit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConselLog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYComboBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYComboLBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYString.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYWindowShadow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYStatic.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYCheckButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYRadioButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDropList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYScrollBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYListCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYHeaderCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSizeBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSize.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDateTable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDateTime.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYColorList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYButtonListCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSysBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYTreeCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYTabCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYColorListCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYPagePane.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYImageList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYProgressCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYShellEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYToolBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYToolTip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYTimeTable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDescribeTable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYCsvFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYShadowBorder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYCaptionCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYCtrlList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSwitchButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYCtrlListDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYLinearBitmap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDateTimeCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDateCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYTimeCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYIPCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYFolderEdit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYMenu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYFileStudio.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDropWindowPool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDragWindow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSqlite3.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSplitterCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSplitterCtrlManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYVersion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYIPAddress.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYMutex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYHeapBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYXML.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYShortcutOperation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYPicture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYRccodec.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYMD5.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYSysProcess.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYWidget.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYWidgetList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYRelative.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYWidgetListDialog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDwm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYDPI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYPropertyList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYLanguage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYMessageBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYWaitCursor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYImageManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYEvent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYRectBackground.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="QYIScroll.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="QYApp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="qydefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYMainWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYMessageMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="qyfc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYRect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYPoint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDC.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="qycolor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDataExchange.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYEdit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYComboBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYComboLBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYString.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYWindowShadow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="includedef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYpicture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYStatic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYCheckButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYRadioButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDropList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYScrollBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYListBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYListCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYHeaderCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSizeBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSize.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYConselLog.H">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDateTable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDateTime.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYColorList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYButtonListCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSysBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYTreeCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYTabCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYColorListCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYPagePane.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYImageList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYProgressCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYShellEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYToolBar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYToolTip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYTimeTable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDescribeTable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYCsvFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYShadowBorder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYCaptionCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYCtrlList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSwitchButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYCtrlListDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYLinearBitmap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDateTimeCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDateCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYTimeCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYIPCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYFolderEdit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYMenu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYFileStudio.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDropWindowPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDragWindow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSqlite3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSplitterCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSplitterCtrlManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYVersion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYIPAddress.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYMutex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYHeapBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYXML.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYShortcutOperation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYRccodec.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYMD5.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYSysProcess.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYWidget.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYWidgetList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYRelative.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYMessageBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYWidgetListDialog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDwm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYDPI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYPropertyList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYLanguage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYImageManage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYWaitCursor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYImageManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYEvent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYRectBackground.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYIScroll.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QYUI.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="shadow.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="shadow2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="192.168.86.195_60-BC-EC_2016_04_11_15_49_48_27529590.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="mac_shadow_37.44px_1142413_easyicon.net副本.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="..\MFCApplication1\shadow2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="shadow.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\check_box_normal.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\check_box_selected.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_left_bottom.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_left_top.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_right_bottom.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_right_top.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_top.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_bottom.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_left.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shadow_right.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_right.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_bottom.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_right_bottom.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\collapse.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\expand.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\radio_box_normal.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\radio_box_select.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\skip_end_page.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\skip_first_page.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\skip_last_page.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\skip_next_page.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\more.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_left.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_left_bottom.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_left_top.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_right_top.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small_shadow_top.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\switch-OFF.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\switch-ON.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\caption_bk.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\foder.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\folder.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\drag.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\warning.png">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

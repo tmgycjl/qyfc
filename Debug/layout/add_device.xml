@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="add_device" text="ADD_DEVICE" size="400,400">
+    <static  id="device_name_text" text="DEVICE_NAME" rel1="0.05,0" rel2="0.5,0.0" offset1="0,20" offset2="0,44" />
+    <edit  id="device_name_edit" rel1="0.5,0" rel2="0.95,0" offset1="0,20" offset2="0,44" />
+    <static  id="address_text" text="ADDRESS" relto="device_name_text" offset1="0,40" offset2="0,40" />
+    <ip  id="address_edit"   relto="device_name_edit" offset1="0,40" offset2="0,40" />
+    <static  id="user_text" text="USER_NAME" relto="address_text" offset1="0,40" offset2="0,40" />
+    <edit  id="user_edit"  relto="address_edit" offset1="0,40" offset2="0,40" />
+    <static  id="pin_text" text="PIN" relto="user_text" offset1="0,40" offset2="0,40" />
+    <edit  id="pin_edit"  password="true" relto="user_edit" offset1="0,40" offset2="0,40" />
+    <static  id="uid_text" text="UID" relto="pin_text" offset1="0,40" offset2="0,40" />
+    <edit  id="uid_edit"  relto="pin_edit" offset1="0,40" offset2="0,40" />
+    <static  id="port_text" text="PORT" relto="uid_text" offset1="0,40" offset2="0,40" />
+    <edit  id="port_edit"  relto="uid_edit" offset1="0,40" offset2="0,40" />
+    <widget id="oper_pane" color="51,51,51"  rel1="0.0,1.0" rel2="1.0,1.0" offset1="0,-48" offset2="0,0">
+      <button  id="add" text="ADD" rel1="0.5,1.0" rel2="0.5,1.0" offset1="-120,-36" offset2="-40,-12"/>
+      <button  id="cancel" text="CANCEL" rel1="0.5,1.0" rel2="0.5,1.0" offset1="40,-36" offset2="120,-12"/>
+    </widget>
+</group> 
+</UI>

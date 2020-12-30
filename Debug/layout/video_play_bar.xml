@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UI>
+  <group id="video_play_bar" type="child" color="0,0,0" text="" size="0,0">
+    <swallow id="video_window" rel1="0.0,0.0" rel2="1.0,1.0" offset1="1,1" offset2="-1,-25"/>
+    <toolbar  id="oper_bar" show_text="false"  border="0" rel1="0.0,1.0" rel2="1.0,1.0" offset1="1,-25" offset2="-1,-1">
+      <image id="0" source="playbar_play.png" />
+      <image id="1" source="playbar_rec.png" />
+      <image id="2" source="playbar_capture.png" />
+      <image id="3" source="playbar_sound.png" />
+      <image id="4" source="playbar_talk.png" />
+      <item id="play" text="PLAY" image="0" align="right"/>
+      <item id="record" text="RECORD" image="1" align="right"/>
+      <item id="snapshot" text="SNAPSHOT" image="2" align="right"/>
+      <item id="sound" text="SOUND" image="3" align="right"/>
+      <item id="talk" text="TALK" image="4" align="right"/>
+    </toolbar>
+</group> 
+</UI>
