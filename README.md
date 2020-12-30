@@ -76,12 +76,41 @@ EXIT_MAIN:
 	app->ExitInstance();
 	SAFE_DELETE(app);
 
-	CoUninitialize();
+## Configure layout in XML file
 
-	return 0;
-}
+	  <?xml version="1.0" encoding="utf-8"?>
+	<UI>
+	  <group id="demo" text="QYFC-DEMO" size="1024,760">
+	    <static  id="text" text="STATIC_TEXT" rel1="0.0,0" rel2="0.0,0.0" offset1="20,20" offset2="100,44" />
+	    <edit  id="edit1" leftto="text RIGHT" offset1="20,20" offset2="200,44" />
+	    <edit  id="edit2"   leftto="edit1 RIGHT" offset1="20,20" offset2="200,44" />
+	</group> 
+	</UI>
 
+## Show window by  XML file
 
+	BOOL MainDlg::OnInitDialog()
+	{
+		QYDialog::OnInitDialog();
+
+		if (!loadLayout("demo.xml", "demo"))
+		{
+			EndDialog(IDCANCEL);
+			return false;
+		}
+
+		QYEdit *ed = (QYEdit*)getObjectPart("edit1");
+		ed->setText("");
+
+		ed = (QYEdit*)getObjectPart("edit2");
+		ed->SetReadOnly(TRUE);
+		ed->setText("readonly editbox");
+
+		return TRUE;
+	}
+
+## Check out "qyfc-demo/qyfc-demo-dlg.cpp"  to learn more.
+	
 # Author
 
 Tom Chan - tmgycjl@163.com
