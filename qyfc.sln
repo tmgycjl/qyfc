@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qyfc-demo", "qyfc-demo\win-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite3", "sqlite3\sqlite3.vcxproj", "{BA7288DD-1763-4BBD-956A-BC90CD445646}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win-ffplay", "win-ffplay\win-ffplay.vcxproj", "{907491C7-A310-43BD-A47E-BA77AE236E7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		debug_static|Win32 = debug_static|Win32
@@ -60,6 +62,18 @@ Global
 		{BA7288DD-1763-4BBD-956A-BC90CD445646}.Release|Win32.ActiveCfg = Release|Win32
 		{BA7288DD-1763-4BBD-956A-BC90CD445646}.Release|Win32.Build.0 = Release|Win32
 		{BA7288DD-1763-4BBD-956A-BC90CD445646}.Release|x64.ActiveCfg = Release|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.debug_static|Win32.ActiveCfg = Debug|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.debug_static|Win32.Build.0 = Debug|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.debug_static|x64.ActiveCfg = Debug|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.Debug|Win32.Build.0 = Debug|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.Debug|x64.ActiveCfg = Debug|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.release_static|Win32.ActiveCfg = Release|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.release_static|Win32.Build.0 = Release|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.release_static|x64.ActiveCfg = Release|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.Release|Win32.ActiveCfg = Release|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.Release|Win32.Build.0 = Release|Win32
+		{907491C7-A310-43BD-A47E-BA77AE236E7C}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
