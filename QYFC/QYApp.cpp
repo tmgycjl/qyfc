@@ -1112,7 +1112,9 @@ bool QYApp::loadTheme(const char *source)
 				}
 			}
 		}
+
+		return true;
 	}
 
-	return true;
+	return false;
 }

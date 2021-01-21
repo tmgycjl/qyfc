@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "win-ffplay-dlg.h"
+#include "Mainframe.h"
 #include "App.h"
 
 #if _DEBUG
@@ -54,31 +54,21 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	QYImageManager::instance()->loadImages(CApp::m_imagePath + "image.dat");
 
 
-	MainDlg *dlg = new MainDlg;
+	CMainframe *pMainWindow = CMainframe::instance();
 
-	if (1 != dlg->DoModal(nullptr))
-	{
-		goto EXIT_MAIN;
-	}
+	app->SetMainWindow(pMainWindow);
+	pMainWindow->ShowShadow(TRUE);
+	pMainWindow->SetIcon(IDI_SMALL);
+	pMainWindow->DoModal();
 
-EXIT_MAIN:
-	
-	SAFE_DESTROY_WINDOW_PTR(dlg);
+
+	SAFE_DESTROY_WINDOW_PTR(pMainWindow);
 
 	app->ExitInstance();
 	SAFE_DELETE(app);
 
 	CoUninitialize();
 
-#if 0
-	_CrtMemCheckpoint(&s2);
-	//8680 bytes in 182 Normal Blocks.4170 bytes in 4 CRT Blocks.
-
-	if (_CrtMemDifference(&s3, &s1, &s2))
-	{
-		_CrtMemDumpStatistics(&s3);
-	}
-#endif
 
 	return 0;
 }

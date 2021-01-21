@@ -48,3 +48,4 @@
 #include "QYImageManager.h"
 #include "QYScrollBar.h"
 #include "QYEvent.h"
+#include "QYIniFile.h"

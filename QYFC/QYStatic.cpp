@@ -67,6 +67,18 @@ LRESULT QYStatic::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_PAINT:OnPaint(); break;
+	case WM_RBUTTONDOWN:
+	{
+		struct w_funcCB_t *actionCB = getCallback(QY_CALLBACK_EVENT);
+		if (nullptr != actionCB)
+		{
+			QYPropertyList properties;
+			properties.addProperty("id", getID());
+			properties.addProperty("action", "rbuttondown");
+			actionCB->callback(&properties);
+		}
+	}
+		break;
 	default:break;
 	}
 	return FALSE;

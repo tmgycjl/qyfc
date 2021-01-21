@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UI>
-  <group id="ffplay" text="WIN_FFPLAY" size="600,400">
-   
+  <group id="ffplay" text="WIN_FFPLAY" size="800,600">
+    <static  id="video_wnd" color="51,51,51"  rel1="0.0,0.0" rel2="1.0,1.0" offset1="8,0" offset2="-8,-8"/>
+</group> 
+ <group id="url_dlg" text="OPEN_URL" size="600,400">
+    <static  id="text1" color="51,51,51" text="INPUT_URL" rel1="0.0,0.0" rel2="1.0,0.0" offset1="15,20" offset2="-15,44"/>
+	<edit  id="edit_url"   leftto="text1 LEFT" topto="text1 BOTTOM" rightto="text1 RIGHT"  offset1="0,20" offset2="0,44"  />
+	 <tree id="history_url" leftto="edit_url LEFT" topto="edit_url BOTTOM" rightto="edit_url RIGHT"  bottomto="GROUP BOTTOM"  offset1="0,20"  offset2="0,-70" drag="false" border="1" item_height="24">
+        <image id="0" source="ipc_online.png" />
+        <image id="1" source="ipc_offline.png" />
+        <image id="2" source="ipc_playing.png" />
+      </tree>
+	  <button  id="play"  text="PLAY" rel1="1.0,1.0" rel2="1.0,1.0"  offset1="-150,-50" offset2="-50,-20" />
 </group> 
 </UI>

@@ -14,6 +14,7 @@ public:
 
 	static BOOL IsValidFilePath(LPCTSTR szPathName);
 	static BOOL DeleteDirectory(LPCTSTR strDir);
+	static BOOL openFileDialog(HWND hWnd, std::string &filePath,  const char *filter, const char *title = nullptr);
 	BOOL FindFirst(LPCTSTR szFilePath);
 	BOOL FindNext();
 	BOOL IsEncrypted();

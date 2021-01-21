@@ -270,6 +270,9 @@
     <ClCompile Include="QYIScroll.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="QYIniFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="QYApp.h">
@@ -543,6 +546,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="QYIScroll.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QYIniFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

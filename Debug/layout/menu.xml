@@ -12,5 +12,8 @@
     <item id="oper 1" text="oper1" />
 	<item id="oper 2" text="oper2" />
   </group>
-
+ <group  id="ffplay_oper">
+    <item id="open_file" text="OPEN_FILE" />
+	<item id="open_url" text="OPEN_URL" />
+  </group>
 </UI>

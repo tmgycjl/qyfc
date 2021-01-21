@@ -13,6 +13,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sqlite3", "sqlite3\sqlite3.vcxproj", "{BA7288DD-1763-4BBD-956A-BC90CD445646}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win-ffplay", "win-ffplay\win-ffplay.vcxproj", "{907491C7-A310-43BD-A47E-BA77AE236E7C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C12D1AA1-0796-4BAE-8C8C-C34E836C31A5} = {C12D1AA1-0796-4BAE-8C8C-C34E836C31A5}
+		{BA7288DD-1763-4BBD-956A-BC90CD445646} = {BA7288DD-1763-4BBD-956A-BC90CD445646}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

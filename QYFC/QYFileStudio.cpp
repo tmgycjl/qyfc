@@ -230,3 +230,31 @@ BOOL QYFileStudio::DeleteDirectory(LPCTSTR strDir)
 	}
 	return TRUE;
 }
+
+
+BOOL QYFileStudio::openFileDialog(HWND hWnd, std::string &filePath, const char *filter, const char *title)
+{
+	OPENFILENAMEA ofn;
+	char szFile[MAX_PATH] = { 0 };
+
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = filter;
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	ofn.lpstrTitle = title;
+	if (GetOpenFileNameA(&ofn))
+	{
+		filePath = szFile;
+		return TRUE;
+	}
+
+	return FALSE;
+}

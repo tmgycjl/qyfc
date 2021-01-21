@@ -190,6 +190,7 @@
     <ClCompile Include="ConselLog.cpp" />
     <ClCompile Include="QYEvent.cpp" />
     <ClCompile Include="QYImageManager.cpp" />
+    <ClCompile Include="QYIniFile.cpp" />
     <ClCompile Include="QYIScroll.cpp" />
     <ClCompile Include="QYLanguage.cpp" />
     <ClCompile Include="QYMessageBox.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="QYEvent.h" />
     <ClInclude Include="QYImageManage.h" />
     <ClInclude Include="QYImageManager.h" />
+    <ClInclude Include="QYIniFile.h" />
     <ClInclude Include="QYIScroll.h" />
     <ClInclude Include="QYLanguage.h" />
     <ClInclude Include="QYPropertyList.h" />
