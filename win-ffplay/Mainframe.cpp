@@ -239,7 +239,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 				char cmdBuf[1024] = { 0 };
 
 				_playWnd = _videoWnd->GetHwnd();
-				sprintf_s(cmdBuf, 1024, " -window %d -render direct3d -x %d -y %d -loglevel quiet -rtsp_transport tcp -analyzeduration 50000"
+				sprintf_s(cmdBuf, 1024, " -window %d -render direct3d11 -x %d -y %d -loglevel quiet -rtsp_transport tcp -analyzeduration 50000"
 					" -i  %s", _playWnd, rc.Width(), rc.Height(), dlg._url.c_str());
 				StartFFPLAY(std::string("F:\\ffmpeg_installed\\bin\\ffplay.exe"), std::string(cmdBuf));
 
