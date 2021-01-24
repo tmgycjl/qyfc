@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UI>
   <group id="ffplay" text="WIN_FFPLAY" size="800,600">
-    <static  id="video_wnd" color="51,51,51"  rel1="0.0,0.0" rel2="1.0,1.0" offset1="2,0" offset2="-2,-2"/>
+    <widget  id="video_widget" color="0,0,0"  rel1="0.0,0.0" rel2="1.0,1.0" offset1="2,0" offset2="-2,-48"/>
+	<process id="play_process" color="0,0,0,255,255,0" rel1="0.0,1.0" rel2="1.0,1.0" offset1="2,-48" offset2="-2,-42" />
+	<button  id="play" image="replay_play.png" rel1="0,1" rel2="0,1" offset1="6,-38" offset2="38,-6"/>
+	<button  id="stop" image="replay_stop.png" leftto="play RIGHT" topto="play TOP" bottomto="play BOTTOM" offset1="6,0" offset2="38,0"/>
+	<static  id="play_time" text="10:10/102:32"  rel1="1.0,1.0" rel2="1.0,1.0" offset1="-80,-38" offset2="-6,-6"/>
+	<button  id="setting" image="tool_local_config.png" leftto="play_time LEFT" rightto="play_time LEFT" topto="play TOP" bottomto="play BOTTOM" offset1="-40,0" offset2="-8,0"/>
 </group> 
  <group id="url_dlg" text="OPEN_URL" size="600,400">
     <static  id="text1" color="51,51,51" text="INPUT_URL" rel1="0.0,0.0" rel2="1.0,0.0" offset1="15,20" offset2="-15,44"/>
@@ -13,4 +18,17 @@
       </tree>
 	  <button  id="play"  text="PLAY" rel1="1.0,1.0" rel2="1.0,1.0"  offset1="-150,-50" offset2="-50,-20" />
 </group> 
+<group id="setting" text="SOFT_CONFIG" size="600,400">
+    <widgetlist  id="edit_list" rel1="0.0,0" rel2="1.0,1.0" offset1="0,0" offset2="0,-48">
+      <widget size="0,24">
+        <static  id="render_text" text="RENDER_MODE" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
+        <combobox id="render_combobox" rel1="0.5,0" rel2="1.0,1.0" offset1="0,0" offset2="-20,0">
+        </combobox>
+      </widget>
+    </widgetlist>
+    <widget id="oper_pane"  rel1="0.0,1.0" rel2="1.0,1.0" offset1="0,-48" offset2="0,0">
+      <button  id="ok" text="APPLY" rel1="0.5,1.0" rel2="0.5,1.0" offset1="-120,-36" offset2="-40,-12"/>
+      <button  id="cancel" text="CANCEL" rel1="0.5,1.0" rel2="0.5,1.0" offset1="40,-36" offset2="120,-12"/>
+    </widget>
+  </group> 
 </UI>

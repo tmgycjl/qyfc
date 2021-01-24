@@ -14,6 +14,7 @@
 #include "QYToolBar.h"
 #include "QYTreeCtrl.h"
 #include "QYRectBackground.h"
+#include "QYProgressCtrl.h"
 
 std::vector<int> stringSplit(std::string str, std::string pattern)
 {
@@ -84,7 +85,7 @@ LRESULT CALLBACK QYWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 			pWindow->WindowProc(message, wParam, lParam);
 			return TRUE;
 		}
-		//SetWindowLong(hWnd, GWL_USERDATA, (LONG)cs->lpCreateParams);
+		//SetWindowLong(hWnd, GWLP_USERDATA, (LONG)cs->lpCreateParams);
 	}
 	break;
 	case WM_NCDESTROY:
@@ -719,7 +720,7 @@ BOOL QYWindow::ScrollWindow(int XAmount, int YAmount, QYRect *lpRect, QYRect *lp
 BOOL QYWindow::SubClassWindow(HWND hWnd)
 {
 	m_hWnd = hWnd;
-	SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)this);
+	SetWindowLong(m_hWnd, GWLP_USERDATA, (LONG)this);
 	m_oldWndProc = (WNDPROC)SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (INT_PTR)WndProc);
 
 	return TRUE;
@@ -1276,6 +1277,21 @@ QYWindow* QYWindow::Append(const char *key,
 		}
 	}
 		break;
+	case QY_CONTROL_TYPE_PROCESS:
+	{
+		pitem->m_pWnd = new QYProgressCtrl;
+		if (nullptr == pitem->m_pWnd)
+		{
+			return nullptr;
+		}
+
+		if (!((QYProgressCtrl*)pitem->m_pWnd)->Create(0, nullptr, nullptr, style, QYRect(0, 0, 0, 0), m_hWnd))
+		{
+			SAFE_DELETE(pitem->m_pWnd);
+			return nullptr;
+		}
+	}
+		break;
 	case QY_CONTROL_TYPE_SWALLOW:
 	{
 		//nothing to do
@@ -1461,8 +1477,8 @@ BOOL QYWindow::loadWidget(QYWindow *pWidget, QYXMLTreeNode *pNode)
 						{
 							if ("LEFT" == topos)
 							{
-								rel1.m_X = it->second->m_rel1.m_X;
-								offset2.cx += it->second->m_offset1.cx;
+								 rel2.m_X = it->second->m_rel1.m_X;
+								offset2.cx += offset1.cx = it->second->m_offset1.cx;
 							}
 							else if ("RIGHT" == topos)
 							{
@@ -1501,7 +1517,7 @@ BOOL QYWindow::loadWidget(QYWindow *pWidget, QYXMLTreeNode *pNode)
 							else if ("BOTTOM" == topos)
 							{
 								rel2.m_Y = it->second->m_rel2.m_Y;
-								offset2.cy += it->second->m_offset2.cy;
+								offset2.cy = it->second->m_offset2.cy;
 							}
 
 						}
@@ -1929,6 +1945,28 @@ BOOL QYWindow::loadWidget(QYWindow *pWidget, QYXMLTreeNode *pNode)
 			else if ("datetable" == p->name)
 			{
 				QYDateTable *pDateTable = (QYDateTable*)pWidget->Append(key.c_str(), QY_CONTROL_TYPE_DATETABLE, rel1, rel2, offset1, offset2);
+			}
+			else if ("process" == p->name)
+			{
+				QYProgressCtrl *pProcess = (QYProgressCtrl*)pWidget->Append(key.c_str(), QY_CONTROL_TYPE_PROCESS, rel1, rel2, offset1, offset2);
+				if (nullptr != pProcess)
+				{
+					std::string s_color = p->getAttribute("color");
+					if (!s_color.empty())
+					{
+						int r = 0;
+						int g = 0;
+						int b = 0;
+						int r1 = 0;
+						int g1 = 0;
+						int b1 = 0;
+						if (6 == sscanf_s(s_color.c_str(), "%d,%d,%d,%d,%d,%d", &r, &g, &b, &r1, &g1, &b1))
+						{
+							pProcess->SetBkColor(RGB(r, g, b), RGB(r1, g1, b1));
+						}
+
+					}
+				}
 			}
 			else if ("rect" == p->name)
 			{

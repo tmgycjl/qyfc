@@ -2,7 +2,7 @@
 #include "QYLanguage.h"
 LRESULT CALLBACK QYButton::ButtonProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	QYButton *pWindow = (QYButton*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYButton *pWindow = (QYButton*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))
@@ -432,9 +432,14 @@ BOOL QYButton::setImage(const char *imagePath,int state)
 
 	m_pImage = new QYPicture(state);
 	assert(nullptr != m_pImage);
-	return m_pImage->load(imagePath);
+	BOOL ret =  m_pImage->load(imagePath);
 
-	return TRUE;
+	if (ret)
+	{
+		Invalidate();
+	}
+
+	return ret;
 }
 
 BOOL QYButton::SetImage(QYPicture *pImage)

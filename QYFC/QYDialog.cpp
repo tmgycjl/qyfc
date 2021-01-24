@@ -30,7 +30,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 		::MoveWindow(hWnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,FALSE);
 	}
 
-	QYWindow *pWindow = (QYWindow*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYWindow *pWindow = (QYWindow*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (nullptr != pWindow)
 	{
 		return TRUE;
@@ -63,7 +63,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 			
 		}
 
-		SetWindowLong(hWnd, GWL_USERDATA, (LONG)pWindow);
+		SetWindowLong(hWnd, GWLP_USERDATA, (LONG)pWindow);
 		pWindow->SetHwnd(hWnd);
 		pWindow->m_oldWndProc = (WNDPROC)SetWindowLongPtr(hWnd, GWLP_WNDPROC, (INT_PTR)QYButton::ButtonProc);
 	}
@@ -75,7 +75,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 			pThis->GetDataExchange()->PushCtrl(hWnd, pWindow);
 		}
 
-		SetWindowLong(hWnd, GWL_USERDATA, (LONG)pWindow);
+		SetWindowLong(hWnd, GWLP_USERDATA, (LONG)pWindow);
 		pWindow->SetHwnd(hWnd);
 		UINT style = GetWindowLong(hWnd, GWL_STYLE);
 		if (style&ES_READONLY)
@@ -93,7 +93,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 			pWindow = new QYComboBox;
 			pThis->GetDataExchange()->PushCtrl(hWnd, pWindow);
 		}
-			SetWindowLong(hWnd, GWL_USERDATA, (LONG)pWindow);
+			SetWindowLong(hWnd, GWLP_USERDATA, (LONG)pWindow);
 			pWindow->SetHwnd(hWnd);
 			COMBOBOXINFO ComboBoxInfo;
 			ComboBoxInfo.cbSize = sizeof(ComboBoxInfo);
@@ -109,7 +109,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 
 					QYWindow *pEdit = new QYEdit;
 					pThis->GetDataExchange()->PushCtrl(ComboBoxInfo.hwndItem, pEdit);
-					SetWindowLong(ComboBoxInfo.hwndItem, GWL_USERDATA, (LONG)pEdit);
+					SetWindowLong(ComboBoxInfo.hwndItem, GWLP_USERDATA, (LONG)pEdit);
 					pEdit->SetHwnd(ComboBoxInfo.hwndItem);
 					UINT style = GetWindowLong(ComboBoxInfo.hwndItem, GWL_STYLE);
 					if (style&ES_READONLY)
@@ -132,7 +132,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 			pWindow = new QYStatic;
 			pThis->GetDataExchange()->PushCtrl(hWnd, pWindow);
 		}
-		SetWindowLong(hWnd, GWL_USERDATA, (LONG)pWindow);
+		SetWindowLong(hWnd, GWLP_USERDATA, (LONG)pWindow);
 		pWindow->SetHwnd(hWnd);
 		pWindow->SetFont((HFONT)QYApp::m_pMsDefultFont->m_hObject);
 		pWindow->m_oldWndProc = (WNDPROC)SetWindowLongPtr(hWnd, GWLP_WNDPROC, (INT_PTR)QYStatic::StaticProc);
@@ -144,7 +144,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 			pWindow = new QYListBox;
 			pThis->GetDataExchange()->PushCtrl(hWnd, pWindow);
 		}
-		SetWindowLong(hWnd, GWL_USERDATA, (LONG)pWindow);
+		SetWindowLong(hWnd, GWLP_USERDATA, (LONG)pWindow);
 		UINT style = GetWindowLong(hWnd, GWL_STYLE);
 	
 		style &= ~LBS_SORT;
@@ -162,7 +162,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 			pWindow = new QYListCtrl;
 			pThis->GetDataExchange()->PushCtrl(hWnd, pWindow);
 		}
-		SetWindowLong(hWnd, GWL_USERDATA, (LONG)pWindow);
+		SetWindowLong(hWnd, GWLP_USERDATA, (LONG)pWindow);
 		pWindow->SetHwnd(hWnd);
 		pWindow->m_oldWndProc = (WNDPROC)SetWindowLongPtr(hWnd, GWLP_WNDPROC, (INT_PTR)QYWindow::WndProc);
 
@@ -179,7 +179,7 @@ static BOOL CALLBACK RegChildWindow(HWND hWnd, QYWindow *param)
 			pWindow = new QYProgressCtrl;
 			pThis->GetDataExchange()->PushCtrl(hWnd, pWindow);
 		}
-		SetWindowLong(hWnd, GWL_USERDATA, (LONG)pWindow);
+		SetWindowLong(hWnd, GWLP_USERDATA, (LONG)pWindow);
 		pWindow->SetHwnd(hWnd);
 		UINT style = GetWindowLong(hWnd, GWL_STYLE);
 		style &= ~WS_BORDER;
@@ -195,7 +195,7 @@ INT_PTR CALLBACK QYDialog::DialogProc(HWND hWnd, UINT message, WPARAM wParam, LP
 	//return FALSE;
 	UNREFERENCED_PARAMETER(lParam);
 	
-	QYDialog *pWindow = (QYDialog*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYDialog *pWindow = (QYDialog*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))
@@ -243,7 +243,7 @@ INT_PTR CALLBACK QYDialog::DialogProc(HWND hWnd, UINT message, WPARAM wParam, LP
 			pDlg->m_hWnd = hWnd;
 			if (pDlg->m_bModal)
 			{
-				SetWindowLong(pDlg->m_hWnd, GWL_USERDATA, (LONG)pDlg);
+				SetWindowLong(pDlg->m_hWnd, GWLP_USERDATA, (LONG)pDlg);
 			}
 
 			pDlg->OnInitDialog();
@@ -584,7 +584,7 @@ bool QYDialog::Create(UINT resID, QYWindow *pParentWnd)
 		return false;
 	}
 
-	SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)this);
+	SetWindowLong(m_hWnd, GWLP_USERDATA, (LONG)this);
 #endif
 
 	return true;

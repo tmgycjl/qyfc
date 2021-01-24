@@ -3,7 +3,7 @@
 
 LRESULT CALLBACK QYComboLBox::ComboLBoxProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	QYComboLBox *pWindow = (QYComboLBox*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYComboLBox *pWindow = (QYComboLBox*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))

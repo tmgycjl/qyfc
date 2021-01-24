@@ -3,7 +3,7 @@
 #include "QYDC.h"
 LRESULT CALLBACK QYComboBox::ComboBoxProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	QYComboBox *pWindow = (QYComboBox*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYComboBox *pWindow = (QYComboBox*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))

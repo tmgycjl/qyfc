@@ -20,7 +20,26 @@
 
 // TODO:  在此处引用程序需要的其他头文件
 #include "../QYFC/qyfc.h"
-#pragma comment(lib,"../lib/x86/qyfc")
+#pragma comment(lib,"qyfc")
 
 
 //#include <vld.h>
+
+
+#include <SDL.h>
+#include <SDL_thread.h>
+
+#pragma  comment(lib,"SDL2")
+
+
+#include "../ffplay/ffplay.h"
+
+#pragma comment(lib,"ffplay")
+
+#include <vector>
+
+#define  CONFIG_INI   L"config.ini"
+
+static std::vector<std::string> _vecRender = { "direct3d", "directdraw" };
+
+

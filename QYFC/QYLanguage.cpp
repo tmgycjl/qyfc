@@ -12,7 +12,7 @@ QYPropertyList QYLanguage::m_langMap;
 static int childWndCount = 0;
 BOOL CALLBACK QYLanguage::EnumChildProc(HWND hwndChild, LPARAM lParam)
 {
-	QYWindow *pWindow = (QYWindow*)GetWindowLong(hwndChild, GWL_USERDATA);
+	QYWindow *pWindow = (QYWindow*)GetWindowLong(hwndChild, GWLP_USERDATA);
 	if (nullptr != pWindow)
 	{
 		TCHAR className[1024] = { 0 };
@@ -100,8 +100,10 @@ void QYLanguage::loadString()
 	char lanPath[1024] = { 0 };
 	sprintf_s(lanPath, "%s\\%s\\string.csv", m_langDir.c_str(), m_langMap.getValueWithDefaultString(m_langKey, "en").c_str());
 
-	int stringCount = 0;
-	std::ifstream inFile( lanPath );
+	int stringCount = 0;
+
+	std::ifstream inFile( lanPath );
+
 	if ( !inFile.is_open() )
 	{
 		return;
@@ -111,12 +113,16 @@ void QYLanguage::loadString()
 		m_stringMap.clearProperty();
 
 		for ( int x = 0; !inFile.eof(); x++ )
-		{
-			std::string line;			std::string idValue;
+		{
+
+			std::string line;
+			std::string idValue;
 			std::string strValue;
 
-			std::getline( inFile, line );
-			auto posIDValueEnd = line.find( "," );
+			std::getline( inFile, line );
+
+			auto posIDValueEnd = line.find( "," );
+
 			if ( std::string::npos == posIDValueEnd )
 			{
 				continue;
@@ -124,10 +130,12 @@ void QYLanguage::loadString()
 			else
 			{
 				idValue.append( line, 0, posIDValueEnd );
-				strValue.append( line, posIDValueEnd + 1, line.length() - posIDValueEnd - 1 );
+				strValue.append( line, posIDValueEnd + 1, line.length() - posIDValueEnd - 1 );
+
 				m_stringMap.addProperty(idValue, strValue);
 			}
-		}
+		}
+
 		inFile.close();
 	}
 #else

@@ -4,7 +4,7 @@
 
 LRESULT CALLBACK QYEdit::EditProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	QYEdit *pWindow = (QYEdit*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYEdit *pWindow = (QYEdit*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))
@@ -117,7 +117,7 @@ BOOL QYEdit::Create(DWORD dwExStyle,
 
 	if (nullptr != m_hWnd)
 	{
-		SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)this);
+		SetWindowLong(m_hWnd, GWLP_USERDATA, (LONG)this);
 		SetWindowLong(m_hWnd, GWL_STYLE, GetWindowLong(m_hWnd, GWL_STYLE) | WS_BORDER);
 		SetFont((HFONT)QYApp::m_pMsDefultFont->m_hObject);
 		m_oldWndProc = (WNDPROC)SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (INT_PTR)QYEdit::EditProc);

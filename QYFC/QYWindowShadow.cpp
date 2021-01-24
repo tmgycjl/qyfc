@@ -6,7 +6,7 @@ INT_PTR CALLBACK QYWindowShadow::WindowShadowProc(HWND hWnd, UINT message, WPARA
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	QYWindowShadow *pWindow = (QYWindowShadow*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYWindowShadow *pWindow = (QYWindowShadow*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))
@@ -479,7 +479,7 @@ void QYWindowShadow::OnMove(QYRect &rect)
 	 m_nShadowPos = shadowPos;
 	 m_bSmall = bSmall;
 
-	 SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)this);
+	 SetWindowLong(m_hWnd, GWLP_USERDATA, (LONG)this);
 
 	 m_oldWndProc = (WNDPROC)SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (INT_PTR)WindowShadowProc);
 	 m_picShadow = new QYPicture[SHADOW_ID_END];
@@ -526,7 +526,7 @@ void QYWindowShadow::OnMove(QYRect &rect)
  {
 	 UNREFERENCED_PARAMETER(lParam);
 
-	 QYDragShadow *pWindow = (QYDragShadow*)GetWindowLong(hWnd, GWL_USERDATA);
+	 QYDragShadow *pWindow = (QYDragShadow*)GetWindowLong(hWnd, GWLP_USERDATA);
 	 if (NULL != pWindow)
 	 {
 		 if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))
@@ -698,7 +698,7 @@ void QYWindowShadow::OnMove(QYRect &rect)
 		 SetWindowLong(GetHwnd(), GWL_STYLE, style);
 	 }
 
-	 SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)this);
+	 SetWindowLong(m_hWnd, GWLP_USERDATA, (LONG)this);
 
 	 SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) ^ 0x80000);
 

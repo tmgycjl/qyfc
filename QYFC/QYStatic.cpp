@@ -4,7 +4,7 @@
 
 LRESULT CALLBACK QYStatic::StaticProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	QYStatic *pWindow = (QYStatic*)GetWindowLong(hWnd, GWL_USERDATA);
+	QYStatic *pWindow = (QYStatic*)GetWindowLong(hWnd, GWLP_USERDATA);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))

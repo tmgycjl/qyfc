@@ -51,12 +51,25 @@ LRESULT QYProgressCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		return OnPaint();
 	}
 	case WM_NCPAINT:
-		return OnNCPaint();
+		//return OnNCPaint();
 		break;
-	default:
+	case WM_LBUTTONDOWN:
 	{
-		break;
+		struct w_funcCB_t *actionCB = getCallback(QY_CALLBACK_EVENT);
+		if (nullptr != actionCB)
+		{
+			QYRect rc;
+			GetClientRect(rc);
+			int pos = m_nRange * LOSHORT(lParam) / rc.Width();
+			QYPropertyList properties;
+			properties.addProperty("id", getID());
+			properties.addProperty("action", "lbuttondown");
+			properties.addProperty("pos", pos);
+			actionCB->callback(&properties);
+		}
 	}
+	break;
+	default:break;
 	}
 	return 0L;
 }

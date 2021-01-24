@@ -60,6 +60,18 @@ LRESULT QYWidget::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		::SendMessage(::GetParent(m_hWnd), message, wParam, lParam);
 	}
 	return TRUE;
+	case WM_RBUTTONDOWN:
+	{
+		struct w_funcCB_t *actionCB = getCallback(QY_CALLBACK_EVENT);
+		if (nullptr != actionCB)
+		{
+			QYPropertyList properties;
+			properties.addProperty("id", getID());
+			properties.addProperty("action", "rbuttondown");
+			actionCB->callback(&properties);
+		}
+	}
+	break;
 	default:break;
 	}
 
