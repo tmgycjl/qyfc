@@ -6,7 +6,8 @@ INT_PTR CALLBACK QYWindowShadow::WindowShadowProc(HWND hWnd, UINT message, WPARA
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	QYWindowShadow *pWindow = (QYWindowShadow*)GetWindowLong(hWnd, GWLP_USERDATA);
+	QYWindowShadow *pWindow = reinterpret_cast<QYWindowShadow*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	//QYWindowShadow *pWindow = (QYWindowShadow*)getWindowPtr(hWnd);
 	if (NULL != pWindow)
 	{
 		if ((INT_PTR)TRUE == pWindow->WindowProc(message, wParam, lParam))
@@ -17,6 +18,20 @@ INT_PTR CALLBACK QYWindowShadow::WindowShadowProc(HWND hWnd, UINT message, WPARA
 
 	switch (message)
 	{
+	case WM_NCCREATE:
+	{
+		if (nullptr == pWindow)
+		{
+			LPCREATESTRUCT lpcs = reinterpret_cast<LPCREATESTRUCT>(lParam);
+			pWindow = static_cast<QYWindowShadow*>(lpcs->lpCreateParams);
+			pWindow->SetHwnd(hWnd);
+			::SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LPARAM>(pWindow));
+			pWindow->WindowProc(message, wParam, lParam);
+			return TRUE;
+		}
+		//SetWindowLong(hWnd, GWLP_USERDATA, (LONG)cs->lpCreateParams);
+	}
+	break;
 	case WM_INITDIALOG:
 	{
 		QYWindowShadow *pDlg = (QYWindowShadow *)lParam;
@@ -30,7 +45,14 @@ INT_PTR CALLBACK QYWindowShadow::WindowShadowProc(HWND hWnd, UINT message, WPARA
 	break;
 	}
 
-	return pWindow->m_oldWndProc(hWnd, message, wParam, lParam);
+	if (nullptr != pWindow)
+	{
+		return pWindow->m_oldWndProc(hWnd, message, wParam, lParam);
+	}
+	else
+	{
+		return ::DefWindowProc(hWnd, message, wParam, lParam);
+	}
 }
 
 QYWindowShadow::QYWindowShadow()
@@ -474,12 +496,13 @@ void QYWindowShadow::OnMove(QYRect &rect)
 		 UpdateWindow(m_hWnd);
 	 }
 
+	// setWindowPtr(m_hWnd, this);
 	 //SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) ^ 0x80000);
 #endif
 	 m_nShadowPos = shadowPos;
 	 m_bSmall = bSmall;
 
-	 SetWindowLong(m_hWnd, GWLP_USERDATA, (LONG)this);
+	 ::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, reinterpret_cast<LPARAM>(this));
 
 	 m_oldWndProc = (WNDPROC)SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (INT_PTR)WindowShadowProc);
 	 m_picShadow = new QYPicture[SHADOW_ID_END];

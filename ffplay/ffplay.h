@@ -6,33 +6,45 @@
 
 
 #ifdef __cplusplus
-extern "C"{
+#if defined __BUILD_DLL
+#define FFPLAY_DLLAPI		extern "C" __declspec(dllexport)
+#elif defined __BUILD_LIB
+#define FFPLAY_DLLAPI
+#else
+#define FFPLAY_DLLAPI		extern "C" __declspec(dllimport)
 #endif
-	int ffplayStartUp(HWND hMsgWnd);
-
-	int ffplayPlay(HWND hWnd, const char *cmd,...);
-
-	int ffplayIsPlaying();
-
-	int ffplayPause();
-
-	int ffplayIsPause();
-
-
-	void ffplaySeekRight();
-
-	void ffplaySeekLeft();
-
-	void ffplaySeekUp();
-
-	void ffplaySeekDown();
-
-	void ffplaySeekTime(int time);
-
-	int  ffplayGetTime(int *totalTime,int *playTime);
-
-	void ffplayStop();
-
-#ifdef __cplusplus
-}
+#else
+#if defined FFPLAY_EXPORTS
+#define FFPLAY_DLLAPI	 __declspec(dllexport)
+#elif defined __BUILD_LIB
+#define FFPLAY_DLLAPI
+#else
+#define FFPLAY_DLLAPI	 __declspec(dllimport)
 #endif
+#endif
+
+	FFPLAY_DLLAPI int ffplayStartUp(HWND hMsgWnd);
+
+	FFPLAY_DLLAPI int ffplayPlay(HWND hWnd, const char *cmd, ...);
+
+	FFPLAY_DLLAPI int ffplayIsPlaying();
+
+	FFPLAY_DLLAPI int ffplayPause();
+
+	FFPLAY_DLLAPI int ffplayIsPause();
+
+
+	FFPLAY_DLLAPI void ffplaySeekRight();
+
+	FFPLAY_DLLAPI void ffplaySeekLeft();
+
+	FFPLAY_DLLAPI void ffplaySeekUp();
+
+	FFPLAY_DLLAPI void ffplaySeekDown();
+
+	FFPLAY_DLLAPI void ffplaySeekTime(int time);
+
+	FFPLAY_DLLAPI int  ffplayGetTime(int *totalTime, int *playTime);
+
+	FFPLAY_DLLAPI void ffplayStop();
+

@@ -36,10 +36,33 @@ std::vector<int> stringSplit(std::string str, std::string pattern)
 	return result;
 }
 
+std::map<HWND, QYWindow*>  QYWindow::_mapWindow;
+
+QYWindow* QYWindow::getWindowPtr(HWND hWnd)
+{
+	auto it = _mapWindow.find(hWnd);
+	if (it != _mapWindow.end())
+	{
+		return it->second;
+	}
+
+	return nullptr;
+}
+
+bool QYWindow::setWindowPtr(HWND hWnd, QYWindow *pWindow)
+{
+	if (nullptr == pWindow)
+	{
+		return false;
+	}
+
+	std::pair<std::map<HWND, QYWindow*>::iterator, bool> ret = _mapWindow.insert(std::map<HWND, QYWindow*>::value_type(hWnd, pWindow));
+	return ret.second;
+}
+
 LRESULT CALLBACK QYWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	//g_ConsoleLog.Print("message:%04x\n", message);
-
+	
 #if 1
 	QYWindow *pWindow = reinterpret_cast<QYWindow*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
 

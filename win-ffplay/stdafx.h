@@ -23,14 +23,6 @@
 #pragma comment(lib,"qyfc")
 
 
-//#include <vld.h>
-
-
-#include <SDL.h>
-#include <SDL_thread.h>
-
-#pragma  comment(lib,"SDL2")
-
 
 #include "../ffplay/ffplay.h"
 

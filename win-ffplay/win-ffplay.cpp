@@ -40,16 +40,16 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	app->InitInstance(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
 
 
-	CApp::bindLayoutPath(std::string(CApp::getAppPath() + "layout\\").c_str());
-	CApp::bindImagePath(std::string(CApp::getAppPath() + "image\\").c_str());
+	CApp::bindLayoutPath(std::string(CApp::getAppPath() + "../../layout\\").c_str());
+	CApp::bindImagePath(std::string(CApp::getAppPath() + "../../image\\").c_str());
 
-	QYLanguage::instance()->setLangDir(std::string(CApp::getAppPath() + "lan").c_str());
+	QYLanguage::instance()->setLangDir(std::string(CApp::getAppPath() + "../../lan").c_str());
 	QYLanguage::instance()->addLang("en");
 	QYLanguage::instance()->addLang("zh");
 	QYLanguage::instance()->setLang("zh");
 
 #if _DEBUG
-	QYImageManager::instance()->packImages(QYApp::getAppPath() + "image", std::string("image.dat"));
+	QYImageManager::instance()->packImages(QYApp::getAppPath() + "../../image", std::string("image.dat"));
 #endif
 	QYImageManager::instance()->loadImages(CApp::m_imagePath + "image.dat");
 

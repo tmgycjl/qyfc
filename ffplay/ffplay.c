@@ -3918,7 +3918,7 @@ static UINT  thread_play(LPVOID lpvoid)
 
 	if (NULL != _d3d)
 	{
-		d3dRelease(_d3d, 1);
+		d3dRelease(_d3d);
 		free(_d3d);
 		_d3d = NULL;
 	}
@@ -3941,6 +3941,8 @@ int ffplayStartUp(HWND hMsgWnd)
 	init_opts();
 
 	_msgWindow = hMsgWnd;
+
+	return 0;
 }
 
 
@@ -4169,6 +4171,8 @@ int  ffplayGetTime(int *totalTime, int *playTime)
 {
 	*totalTime = _totalTime;
 	*playTime = _playTime;
+
+	return 0;
 }
 
 void ffplaySeekTime(int time)

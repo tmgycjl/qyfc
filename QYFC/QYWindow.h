@@ -31,6 +31,9 @@ class QYUI_EXPORT_CLASS QYWindow : public QYMessageMap
 {
 public:
 	HWND m_hWnd;
+	static std::map<HWND, QYWindow*> _mapWindow;
+	static QYWindow* getWindowPtr(HWND hWnd);
+	static bool setWindowPtr(HWND hWnd, QYWindow *pWindow);
 	QYWindow(void);
 	virtual ~QYWindow(void);
 	//QYWindow* GetDesktopWindow(){ return (QYWindow*)::(HWND)GetDesktopWindow(); }
