@@ -56,7 +56,13 @@
 #include <SDL.h>
 #include <SDL_thread.h>
 
+#if _DEBUG
+#pragma  comment(lib,"SDL2d")
+#else
 #pragma  comment(lib,"SDL2")
+#endif
+
+
 
 #include "ffddraw.h"
 #include "ffd3d.h"
@@ -73,6 +79,7 @@
 #pragma  comment(lib,"avfilter")
 #pragma  comment(lib,"avdevice")
 
+#define  _USE_SDL_RENDER   1
 
 #include "ffplay.h"
 
@@ -1031,9 +1038,49 @@ static int upload_ddraw_data(FFDDraw *ddraw, AVFrame *frame, struct SwsContext *
 	return ret;
 }
 
+static void
+yuv420_to_yv12(BYTE * y_dst, BYTE * u_dst, BYTE * v_dst,
+int y_dst_stride, int uv_dst_stride,
+BYTE * y_src, BYTE * u_src, BYTE * v_src,
+int y_src_stride, int uv_src_stride,
+int width, int height, int vflip)
+{
+	int width2 = width >> 1;
+	int height2 = height >> 1;
+	int y;
+
+	if (vflip) {
+		y_src += (height - 1) * y_src_stride;
+		u_src += (height2 - 1) * uv_src_stride;
+		v_src += (height2 - 1) * uv_src_stride;
+		y_src_stride = -y_src_stride;
+		uv_src_stride = -uv_src_stride;
+	}
+
+	for (y = height; y; y--) {
+		memcpy(y_dst, y_src, width);
+		y_src += y_src_stride;
+		y_dst += y_dst_stride;
+	}
+
+	for (y = height2; y; y--) {
+		memcpy(u_dst, u_src, width2);
+		u_src += uv_src_stride;
+		u_dst += uv_dst_stride;
+	}
+
+	for (y = height2; y; y--) {
+		memcpy(v_dst, v_src, width2);
+		v_src += uv_src_stride;
+		v_dst += uv_dst_stride;
+	}
+}
+
 
 static int upload_d3d_data(FFD3D *d3d, AVFrame *frame, struct SwsContext **img_convert_ctx) {
 	int ret = 0;
+#if 1
+	
 	Uint32 sdl_pix_fmt;
 	*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
 		frame->width, frame->height, frame->format, frame->width, frame->height,
@@ -1057,6 +1104,32 @@ static int upload_d3d_data(FFD3D *d3d, AVFrame *frame, struct SwsContext **img_c
 		av_log(NULL, AV_LOG_FATAL, "Cannot initialize the conversion context\n");
 		ret = -1;
 	}
+#else
+	uint8_t *pixels[4] = { NULL };
+	int pitch[4] = { 0 };
+	if (!d3dLockSurface(d3d, (void **)pixels, pitch))
+	{
+		yuv420_to_yv12(pixels, 
+			pixels + (pitch[0] * frame->height) + ((pitch[0] * frame->height) / 4), 
+			pixels + (pitch[0] * frame->height),
+			pitch[0], pitch[0] / 2, frame->data[0], 
+			frame->data[1], 
+			frame->data[2], 
+			frame->linesize[0], 
+			frame->linesize[1], 
+			frame->width, 
+			frame->height, 
+			0);
+
+		d3dUnlockSurface(d3d);
+	}
+	else
+	{
+		return -1;
+	}
+
+#endif
+	
 
 	return ret;
 }
@@ -1084,21 +1157,7 @@ static void video_image_display(VideoState *is)
     Frame *vp;
     Frame *sp = NULL;
     SDL_Rect rect;
-#if 0
 
-
-    if(_rectViewport.w != is->width || _rectViewport.h != is->height)
-    {
-        SDL_Rect r;
-        r.x = 0;
-        r.y = 0;
-        r.w = is->width;
-        r.h = is->height;
-        SDL_RenderSetViewport(renderer,&r);
-        SDL_RenderGetViewport(renderer,&_rectViewport);
-        printf("sub_rect.x:%d, sub_rect.y:%d, sub_rect->width:%d, sub_rect->height:%d\n",_rectViewport.x,_rectViewport.y,_rectViewport.w,_rectViewport.h);   
-    }
-#endif
     vp = frame_queue_peek_last(&is->pictq);
     if (is->subtitle_st) {
         if (frame_queue_nb_remaining(&is->subpq) > 0) {
@@ -1148,9 +1207,7 @@ static void video_image_display(VideoState *is)
         }
     }
 
-
-    calculate_display_rect(&rect, is->xleft, is->ytop, is->width, is->height, vp->width, vp->height, vp->sar);
-
+	
 	if (_imageWidth != vp->width || _imageHeight != vp->height)
 	{
 		PostMessage(_msgWindow, WM_FFPLAY_VIDEO_RESIZE, vp->width, vp->height);
@@ -1158,11 +1215,18 @@ static void video_image_display(VideoState *is)
 		_imageHeight = vp->height;
 	}
 
+    calculate_display_rect(&rect, is->xleft, is->ytop, is->width, is->height, vp->width, vp->height, vp->sar);
+
+#if _USE_SDL_RENDER
+#else
+	
+	
+
 	if (RENDER_TYPE_D3D == _renderType)
 	{
 		d3dCreate(_d3d, _window, vp->frame->width, vp->frame->height, TRUE);
 	}
-	else  if(RENDER_TYPE_DDRAW == _renderType)
+	else  if (RENDER_TYPE_DDRAW == _renderType)
 	{
 		ddrawCreate(_ddraw, _window, vp->frame->width, vp->frame->height, TRUE);
 	}
@@ -1170,13 +1234,14 @@ static void video_image_display(VideoState *is)
 	{
 		return;
 	}
+
+#endif
 	
     if (!vp->uploaded) {
-        //if (upload_texture(&is->vid_texture, vp->frame, &is->img_convert_ctx) < 0)
-           // return;
-        vp->uploaded = 1;
-        vp->flip_v = vp->frame->linesize[0] < 0;
-
+#if _USE_SDL_RENDER
+		 if (upload_texture(&is->vid_texture, vp->frame, &is->img_convert_ctx) < 0)
+		return;
+#else
 		if (RENDER_TYPE_D3D == _renderType)
 		{
 			if (upload_d3d_data(_d3d, vp->frame, &is->img_convert_ctx) < 0)
@@ -1192,15 +1257,19 @@ static void video_image_display(VideoState *is)
 			return;
 		}
 
-		
+#endif
+
+		vp->uploaded = 1;
+		vp->flip_v = vp->frame->linesize[0] < 0;
     }
     
-    //printf("sub_rect.x:%d, sub_rect.y:%d, sub_rect->width:%d, sub_rect->height:%d\n",r.x,r.y,r.w,r.h);     
 
-    //set_sdl_yuv_conversion_mode(vp->frame);
-	
-    //SDL_RenderCopyEx(renderer, is->vid_texture, NULL, &rect, 0, NULL, vp->flip_v ? SDL_FLIP_VERTICAL : 0);
-    //set_sdl_yuv_conversion_mode(NULL);
+#if _USE_SDL_RENDER
+	set_sdl_yuv_conversion_mode(vp->frame);
+
+	SDL_RenderCopyEx(renderer, is->vid_texture, NULL, &rect, 0, NULL, vp->flip_v ? SDL_FLIP_VERTICAL : 0);
+	set_sdl_yuv_conversion_mode(NULL);
+#else
 	if (RENDER_TYPE_D3D == _renderType)
 	{
 		d3dRender(_d3d, vp->frame->width, vp->frame->height, _window);
@@ -1213,9 +1282,8 @@ static void video_image_display(VideoState *is)
 	{
 		return;
 	}
+#endif
 
-
-	
     if (sp) {
 #if USE_ONEPASS_SUBTITLE_RENDER
        // SDL_RenderCopy(renderer, is->sub_texture, NULL, &rect);
@@ -3923,6 +3991,7 @@ static UINT  thread_play(LPVOID lpvoid)
 		_d3d = NULL;
 	}
 
+
 	_playing = 0;
 
 	return 0;
@@ -4019,7 +4088,7 @@ int ffplayPlay(HWND hWnd, const char *cmd, ...)
 		else
 			flags |= SDL_WINDOW_RESIZABLE;
 
-#if 1
+#if !_USE_SDL_RENDER
 		_window = hWnd;
 
 		if (NULL != _render && 0 != strcmp("directdraw", _render))
@@ -4069,6 +4138,7 @@ int ffplayPlay(HWND hWnd, const char *cmd, ...)
 					if (0 == strcmp(_render, info.name))
 					{
 						renderIndex = i;
+						break;
 					}
 				}
 
@@ -4083,7 +4153,6 @@ int ffplayPlay(HWND hWnd, const char *cmd, ...)
 
 				if (!SDL_GetRendererInfo(renderer, &renderer_info))
 					av_log(NULL, AV_LOG_VERBOSE, "Initialized %s renderer.\n", renderer_info.name);
-				SDL_RenderGetViewport(renderer, &_rectViewport);
 			}
 		}
 		if (!window || !renderer || !renderer_info.num_texture_formats) {

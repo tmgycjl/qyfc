@@ -290,7 +290,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <ImportLibrary>../lib/x86/$(TargetName).lib</ImportLibrary>
       <GenerateMapFile>true</GenerateMapFile>
-      <AdditionalLibraryDirectories>../lib/x86;C:\tools\ThirdPartLibrary\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../lib/$(Platform)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>

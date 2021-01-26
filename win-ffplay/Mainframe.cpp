@@ -137,13 +137,13 @@ bool CMainframe::playFile(std::string &filePath)
 	{
 		char cmdBuf[1024] = { 0 };
 		_playWnd = _videoWnd->GetHwnd();
-
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 	
 		if (0 == ffplayPlay(_playWnd, "%s %s,%s %s,%s %s,%s %s,%s %s",
 			QYApp::getAppPath().c_str(),
 			"-render", _vecRender[iniFile.Get_int(L"setting", L"render", 0)].c_str(),
 			"-loglevel", "quiet",
+			"-format", "rgb32",
 			"-i", filePath.c_str(),
 			" "
 			))
@@ -186,6 +186,7 @@ BOOL CMainframe::OnInitDialog()
 		_videoWnd = (QYStatic*)_videoWidget->Append("video_wnd", QY_CONTROL_TYPE_STATIC);
 		if (nullptr != _videoWnd)
 		{
+			_videoWnd->Show(SW_HIDE);
 			_videoWnd->SetBkColor(RGB(0, 0, 0));
 			_videoWnd->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
 		}
@@ -258,7 +259,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 	else if ("open_file" == id)
 	{
 		std::string filePath;
-		if (QYFileStudio::openFileDialog(GetHwnd(), filePath, "media files (*.mp4*)\0*.mp4*\0\0"))
+		if (QYFileStudio::openFileDialog(GetHwnd(), filePath, "media files (*.*)\0*.*\0\0"))
 		{
 			if (playFile(filePath))
 			{
@@ -325,13 +326,13 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 	else if ("stop" == id)
 	{
 		ffplayStop();
+		
 		_pause = false;
 		_play->setImage("replay_play.png");
 		KillTimer(1);
 		_timeText->setWindowText("00:00/00:00");
 		_playProcess->SetRange(0);
 		_playProcess->SetPos(0);
-		_videoWnd->Invalidate();
 	}
 	else if ("setting" == id)
 	{
