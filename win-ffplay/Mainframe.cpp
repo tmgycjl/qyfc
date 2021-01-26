@@ -138,7 +138,14 @@ bool CMainframe::playFile(std::string &filePath)
 		char cmdBuf[1024] = { 0 };
 		_playWnd = _videoWnd->GetHwnd();
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
-	
+
+		unsigned int nCmdShow = SW_SHOW;
+		unsigned int style = GetWindowLong(_playWnd, GWL_EXSTYLE);
+		if (style & WS_EX_NOACTIVATE) {
+			nCmdShow = SW_SHOWNOACTIVATE;
+		}
+
+		_videoWnd->Show(nCmdShow);
 		if (0 == ffplayPlay(_playWnd, "%s %s,%s %s,%s %s,%s %s,%s %s",
 			QYApp::getAppPath().c_str(),
 			"-render", _vecRender[iniFile.Get_int(L"setting", L"render", 0)].c_str(),
@@ -183,9 +190,13 @@ BOOL CMainframe::OnInitDialog()
 	{
 		_videoWidget->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
 
-		_videoWnd = (QYStatic*)_videoWidget->Append("video_wnd", QY_CONTROL_TYPE_STATIC);
+		_videoWnd = new QYStatic;
+		_videoWnd->CreateEx(WS_EX_NOACTIVATE, L"QYStatic", nullptr, WS_CHILD, 0, 0, 0, 0, _videoWidget);
+		//_videoWnd = (QYStatic*)_videoWidget->Append("video_wnd", QY_CONTROL_TYPE_STATIC);
 		if (nullptr != _videoWnd)
 		{
+			_videoWnd->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOCOPYBITS | SWP_NOZORDER | SWP_NOACTIVATE);
+
 			_videoWnd->Show(SW_HIDE);
 			_videoWnd->SetBkColor(RGB(0, 0, 0));
 			_videoWnd->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
@@ -259,7 +270,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 	else if ("open_file" == id)
 	{
 		std::string filePath;
-		if (QYFileStudio::openFileDialog(GetHwnd(), filePath, "media files (*.*)\0*.*\0\0"))
+		if (QYFileStudio::openFileDialog(GetHwnd(), filePath, "Media Files (.mp4;.avi;.pch;.mkv;.rmvb;.flv)\0*.mp4;.avi;.pch;.mkv;.rmvb;.flv;\0All Files (*.*)\0*.*;\0"))
 		{
 			if (playFile(filePath))
 			{
@@ -326,7 +337,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 	else if ("stop" == id)
 	{
 		ffplayStop();
-		
+		_videoWnd->Show(SW_HIDE);
 		_pause = false;
 		_play->setImage("replay_play.png");
 		KillTimer(1);

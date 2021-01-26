@@ -32,6 +32,7 @@ extern "C"{
 
 	void d3dRender(FFD3D *d3d, int width, int height, HWND hWnd);
 
+	void d3dRenderInternal(FFD3D *d3d);
 #if 0
 	void ddrawRenderYUV(FFDDraw *ddraw, HWND hWnd, AVFrame *frame);
 #endif

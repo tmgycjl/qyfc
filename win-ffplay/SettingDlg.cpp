@@ -90,6 +90,7 @@ void SettingDlg::onEvent(QYPropertyList *propertyList)
 		{
 			QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 			iniFile.Write_int(L"setting",L"render",render->GetCurSel());
+			EndDialog(IDCANCEL);
 		}
 		 
 	}

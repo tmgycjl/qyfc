@@ -22,8 +22,7 @@ typedef struct
 	LPDIRECTDRAWCOLORCONTROL	m_pddColorCtrl;
 	RECT					m_rcBackBuffer;
 	RECT					m_rcDispBuffer;
-	BOOL					m_bInitDD;
-
+	BOOL					m_bInitDD;                    
 	HWND					m_hWnd;
 	BOOL					m_bTryOverlay;
 	BOOL					m_bUseOverlay;
@@ -34,6 +33,7 @@ typedef struct
     int					m_nImageWidth;
 	int					m_nImageHeight;	
 	struct SwsContext *img_convert_ctx;
+
 }FFDDraw;
 
 

@@ -57,7 +57,7 @@
 #include <SDL_thread.h>
 
 #if _DEBUG
-#pragma  comment(lib,"SDL2d")
+#pragma  comment(lib,"SDL2")
 #else
 #pragma  comment(lib,"SDL2")
 #endif
@@ -79,7 +79,7 @@
 #pragma  comment(lib,"avfilter")
 #pragma  comment(lib,"avdevice")
 
-#define  _USE_SDL_RENDER   1
+#define  _USE_SDL_RENDER   0
 
 #include "ffplay.h"
 
@@ -1009,13 +1009,58 @@ static int upload_texture(SDL_Texture **tex, AVFrame *frame, struct SwsContext *
     return ret;
 }
 
+
+
+static void
+yuv420_2_yv12(uint8_t * y_dst, uint8_t * u_dst, uint8_t * v_dst,
+int y_dst_stride, int uv_dst_stride,
+uint8_t * y_src, uint8_t * u_src, uint8_t * v_src,
+int y_src_stride, int uv_src_stride,
+int width, int height, int vflip)
+{
+	int width2 = width / 2;
+	int height2 = height / 2;
+	int y;
+
+	if (vflip) {
+		y_src += (height - 1) * y_src_stride;
+		u_src += (height2 - 1) * uv_src_stride;
+		v_src += (height2 - 1) * uv_src_stride;
+		y_src_stride = -y_src_stride;
+		uv_src_stride = -uv_src_stride;
+	}
+
+	for (y = height; y; y--) {
+		memcpy(y_dst, y_src, width);
+		y_src += y_src_stride;
+		y_dst += y_dst_stride;
+	}
+
+	for (y = height2; y; y--) {
+		memcpy(u_dst, u_src, width2);
+		u_src += uv_src_stride;
+		u_dst += uv_dst_stride;
+	}
+
+	for (y = height2; y; y--) {
+		memcpy(v_dst, v_src, width2);
+		v_src += uv_src_stride;
+		v_dst += uv_dst_stride;
+	}
+}
+
 static int upload_ddraw_data(FFDDraw *ddraw, AVFrame *frame, struct SwsContext **img_convert_ctx) {
 	int ret = 0;
-	Uint32 sdl_pix_fmt;
+
+	switch (ddraw->m_dispBufFormat)
+	{
+	case FORMAT_RGB32:
+	{
+		Uint32 sdl_pix_fmt;
 		*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
 			frame->width, frame->height, frame->format, frame->width, frame->height,
 			AV_PIX_FMT_BGRA, sws_flags, NULL, NULL, NULL);
-		if (*img_convert_ctx != NULL) 
+		if (*img_convert_ctx != NULL)
 		{
 			uint8_t *pixels[4] = { NULL };
 			int pitch[4] = { 0 };
@@ -1034,6 +1079,30 @@ static int upload_ddraw_data(FFDDraw *ddraw, AVFrame *frame, struct SwsContext *
 			av_log(NULL, AV_LOG_FATAL, "Cannot initialize the conversion context\n");
 			ret = -1;
 		}
+	}
+		break;
+	case FORMAT_YV12:
+	{
+		uint8_t *pixels[4] = { NULL };
+		int pitch[4] = { 0 };
+		if (!ddrawLockSurface(ddraw, (void **)pixels, pitch))
+		{
+			yuv420_2_yv12((BYTE *)pixels[0],
+				(BYTE *)pixels[1] ,
+				(BYTE *)pixels[2],
+				pitch[0], pitch[0] >> 1, frame->data[0], frame->data[1], frame->data[2], frame->linesize[0], frame->linesize[1], frame->width, frame->height, 0);
+			ddrawUnlockSurface(_ddraw);
+		}
+		else
+		{
+			return -1;
+		}
+	}
+		break;
+	default:
+		break;
+	}
+	
 
 	return ret;
 }
@@ -3500,6 +3569,17 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
 					_playTime = pos;
 				}
 				
+			}
+		}
+		else if (is->paused )
+		{
+			if (RENDER_TYPE_D3D == _renderType && NULL != _d3d)
+			{
+				d3dRenderInternal(_d3d);
+			}
+			else  if (RENDER_TYPE_DDRAW == _renderType && NULL != _ddraw)
+			{
+				//ddrawRender(_ddraw, , 0, 0, NULL);
 			}
 		}
         SDL_PumpEvents();

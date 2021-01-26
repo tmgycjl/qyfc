@@ -174,14 +174,14 @@ BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreate
 
 	ddpf.dwFourCC = MAKEFOURCC('Y', 'V', '1', '2');//使用YV12表面
 
-//	RGB表面
+#if 0
 	ddsd.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;     
-	if(bBltStretchX)
+	if (bBltStretchX)
 		ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY;
 	else
 		ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
-	ddsd.dwWidth        = ddraw->m_nImageWidth;
-	ddsd.dwHeight       = ddraw->m_nImageHeight;
+	ddsd.dwWidth = ddraw->m_nImageWidth;
+	ddsd.dwHeight = ddraw->m_nImageHeight;
 
 	if (SUCCEEDED(hr = ddraw->m_pDD->CreateSurface(&ddsd, &ddraw->m_pddsDispBuffer, NULL)))
 	{
@@ -189,19 +189,19 @@ BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreate
 		ddpf.dwSize = sizeof(DDPIXELFORMAT);
 		ddpf.dwFlags = DDPF_RGB;
 		ddraw->m_pddsDispBuffer->GetPixelFormat(&ddpf);
-		if(ddpf.dwRGBBitCount == 32)
+		if (ddpf.dwRGBBitCount == 32)
 		{
 			ddraw->m_dispBufFormat = FORMAT_RGB32;
 		}
-		else if(ddpf.dwRGBBitCount == 24)
+		else if (ddpf.dwRGBBitCount == 24)
 		{
 			ddraw->m_dispBufFormat = FORMAT_RGB24;
 		}
-		else if(ddpf.dwRGBBitCount == 16)
+		else if (ddpf.dwRGBBitCount == 16)
 		{
-			if(ddpf.dwRBitMask == 0xF800)
+			if (ddpf.dwRBitMask == 0xF800)
 				ddraw->m_dispBufFormat = FORMAT_RGB565;
-			else if(ddpf.dwRBitMask == 0x7C00)
+			else if (ddpf.dwRBitMask == 0x7C00)
 				ddraw->m_dispBufFormat = FORMAT_RGB555;
 			else
 				ddraw->m_dispBufFormat = FORMAT_NONE;
@@ -211,6 +211,9 @@ BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreate
 		return TRUE;
 	}
 
+#endif
+//	RGB表面
+	
 	// 试YUV表面		
 	if(bBltFourCC && (capBackBuffer.dwCaps & DDSCAPS_VIDEOMEMORY))
 	{
@@ -339,9 +342,9 @@ int ddrawLockSurface(FFDDraw *ddraw, void **data, int *pitch)
 	}
 
 	data[0] = ddsd.lpSurface;
-	data[1] = (char*)ddsd.lpSurface + ddsd.dwHeight * ddsd.lPitch;
-	data[2] = (char*)ddsd.lpSurface + 2 * ddsd.dwHeight * ddsd.lPitch ;
-	data[3] = (char*)ddsd.lpSurface + 3 * ddsd.dwHeight * ddsd.lPitch ;
+	data[1] = (char*)ddsd.lpSurface + 5*ddsd.dwHeight * ddsd.lPitch/4;
+	data[2] = (char*)ddsd.lpSurface +  ddsd.dwHeight * ddsd.lPitch ;
+	//data[3] = (char*)ddsd.lpSurface + 3 * ddsd.dwHeight * ddsd.lPitch ;
 
 	pitch[0] = ddsd.lPitch;
 
