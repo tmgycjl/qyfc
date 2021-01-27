@@ -66,6 +66,7 @@
 
 #include "ffddraw.h"
 #include "ffd3d.h"
+#include "ffd3d11.h"
 
 #include "cmdutils.h"
 
@@ -407,12 +408,14 @@ static SDL_AudioDeviceID audio_dev;
 
 enum RenderType
 {
+	RENDER_TYPE_D3D11,
 	RENDER_TYPE_D3D,
 	RENDER_TYPE_DDRAW
 };
 
 static FFDDraw *_ddraw = NULL;
 static FFD3D*_d3d = NULL;
+static FFD3D11 *_d3d11 = NULL;
 static enum RenderType _renderType = RENDER_TYPE_D3D;
 
 static const struct TextureFormatEntry {
@@ -1107,101 +1110,126 @@ static int upload_ddraw_data(FFDDraw *ddraw, AVFrame *frame, struct SwsContext *
 	return ret;
 }
 
-static void
-yuv420_to_yv12(BYTE * y_dst, BYTE * u_dst, BYTE * v_dst,
-int y_dst_stride, int uv_dst_stride,
-BYTE * y_src, BYTE * u_src, BYTE * v_src,
-int y_src_stride, int uv_src_stride,
-int width, int height, int vflip)
-{
-	int width2 = width >> 1;
-	int height2 = height >> 1;
-	int y;
-
-	if (vflip) {
-		y_src += (height - 1) * y_src_stride;
-		u_src += (height2 - 1) * uv_src_stride;
-		v_src += (height2 - 1) * uv_src_stride;
-		y_src_stride = -y_src_stride;
-		uv_src_stride = -uv_src_stride;
-	}
-
-	for (y = height; y; y--) {
-		memcpy(y_dst, y_src, width);
-		y_src += y_src_stride;
-		y_dst += y_dst_stride;
-	}
-
-	for (y = height2; y; y--) {
-		memcpy(u_dst, u_src, width2);
-		u_src += uv_src_stride;
-		u_dst += uv_dst_stride;
-	}
-
-	for (y = height2; y; y--) {
-		memcpy(v_dst, v_src, width2);
-		v_src += uv_src_stride;
-		v_dst += uv_dst_stride;
-	}
-}
-
-
 static int upload_d3d_data(FFD3D *d3d, AVFrame *frame, struct SwsContext **img_convert_ctx) {
 	int ret = 0;
-#if 1
-	
-	Uint32 sdl_pix_fmt;
-	*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
-		frame->width, frame->height, frame->format, frame->width, frame->height,
-		AV_PIX_FMT_BGRA, sws_flags, NULL, NULL, NULL);
-	if (*img_convert_ctx != NULL)
+
+	switch (d3d->m_Format)
+	{
+	case D3DFMT_A8R8G8B8:
+	{
+		Uint32 sdl_pix_fmt;
+		*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
+			frame->width, frame->height, frame->format, frame->width, frame->height,
+			AV_PIX_FMT_BGRA, sws_flags, NULL, NULL, NULL);
+		if (*img_convert_ctx != NULL)
+		{
+			uint8_t *pixels[4] = { NULL };
+			int pitch[4] = { 0 };
+			if (!d3dLockSurface(d3d, (void **)pixels, pitch))
+			{
+				sws_scale(*img_convert_ctx, (const uint8_t * const *)frame->data, frame->linesize,
+					0, frame->height, pixels, pitch);
+				d3dUnlockSurface(d3d);
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else {
+			av_log(NULL, AV_LOG_FATAL, "Cannot initialize the conversion context\n");
+			ret = -1;
+		}
+	}
+		break;
+	case D3DFMT_YUY2:
 	{
 		uint8_t *pixels[4] = { NULL };
 		int pitch[4] = { 0 };
-		if (!d3dLockSurface(d3d, (void **)pixels, pitch))
+		if (!ddrawLockSurface(d3d, (void **)pixels, pitch))
 		{
-			sws_scale(*img_convert_ctx, (const uint8_t * const *)frame->data, frame->linesize,
-				0, frame->height, pixels, pitch);
-			d3dUnlockSurface(d3d);
+			yuv420_2_yv12((BYTE *)pixels[0],
+				(BYTE *)pixels[1],
+				(BYTE *)pixels[2],
+				pitch[0], pitch[0] >> 1, frame->data[0], frame->data[1], frame->data[2], frame->linesize[0], frame->linesize[1], frame->width, frame->height, 0);
+			ddrawUnlockSurface(_ddraw);
 		}
 		else
 		{
 			return -1;
 		}
 	}
-	else {
-		av_log(NULL, AV_LOG_FATAL, "Cannot initialize the conversion context\n");
-		ret = -1;
-	}
-#else
-	uint8_t *pixels[4] = { NULL };
-	int pitch[4] = { 0 };
-	if (!d3dLockSurface(d3d, (void **)pixels, pitch))
-	{
-		yuv420_to_yv12(pixels, 
-			pixels + (pitch[0] * frame->height) + ((pitch[0] * frame->height) / 4), 
-			pixels + (pitch[0] * frame->height),
-			pitch[0], pitch[0] / 2, frame->data[0], 
-			frame->data[1], 
-			frame->data[2], 
-			frame->linesize[0], 
-			frame->linesize[1], 
-			frame->width, 
-			frame->height, 
-			0);
 
-		d3dUnlockSurface(d3d);
+		break;
+	default:
+		break;
 	}
-	else
-	{
-		return -1;
-	}
-
-#endif
 	
 
 	return ret;
 }
+
+
+
+static int upload_d3d11_data(FFD3D11 *d3d, AVFrame *frame, struct SwsContext **img_convert_ctx) {
+	int ret = 0;
+
+	switch (d3d->m_Format)
+	{
+	case DXGI_FORMAT_R8G8B8A8_UNORM:
+	{
+		Uint32 sdl_pix_fmt;
+		*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
+			frame->width, frame->height, frame->format, frame->width, frame->height,
+			AV_PIX_FMT_RGBA, sws_flags, NULL, NULL, NULL);
+		if (*img_convert_ctx != NULL)
+		{
+			uint8_t *pixels[4] = { NULL };
+			int pitch[4] = { 0 };
+			if (!d3d11LockSurface(d3d, (void **)pixels, pitch))
+			{
+				sws_scale(*img_convert_ctx, (const uint8_t * const *)frame->data, frame->linesize,
+					0, frame->height, pixels, pitch);
+				d3d11UnlockSurface(d3d);
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else {
+			av_log(NULL, AV_LOG_FATAL, "Cannot initialize the conversion context\n");
+			ret = -1;
+		}
+	}
+	break;
+	case D3DFMT_YUY2:
+	{
+		uint8_t *pixels[4] = { NULL };
+		int pitch[4] = { 0 };
+		if (!d3d11LockSurface(d3d, (void **)pixels, pitch))
+		{
+			yuv420_2_yv12((BYTE *)pixels[0],
+				(BYTE *)pixels[1],
+				(BYTE *)pixels[2],
+				pitch[0], pitch[0] >> 1, frame->data[0], frame->data[1], frame->data[2], frame->linesize[0], frame->linesize[1], frame->width, frame->height, 0);
+			d3d11UnlockSurface(_ddraw);
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	break;
+	default:
+		break;
+	}
+
+
+	return ret;
+}
+
 
 
 static void set_sdl_yuv_conversion_mode(AVFrame *frame)
@@ -1289,15 +1317,18 @@ static void video_image_display(VideoState *is)
 #if _USE_SDL_RENDER
 #else
 	
-	
 
 	if (RENDER_TYPE_D3D == _renderType)
 	{
 		d3dCreate(_d3d, _window, vp->frame->width, vp->frame->height, TRUE);
 	}
+	else if (RENDER_TYPE_D3D11 == _renderType)
+	{
+		d3d11Create(_d3d11, _window, vp->frame->width, vp->frame->height, TRUE);
+	}
 	else  if (RENDER_TYPE_DDRAW == _renderType)
 	{
-		ddrawCreate(_ddraw, _window, vp->frame->width, vp->frame->height, TRUE);
+		ddrawReCreate(_ddraw, _window, vp->frame->width, vp->frame->height, TRUE);
 	}
 	else
 	{
@@ -1314,6 +1345,11 @@ static void video_image_display(VideoState *is)
 		if (RENDER_TYPE_D3D == _renderType)
 		{
 			if (upload_d3d_data(_d3d, vp->frame, &is->img_convert_ctx) < 0)
+				return;
+		}
+		else if (RENDER_TYPE_D3D11 == _renderType)
+		{
+			if (upload_d3d11_data(_d3d11, vp->frame, &is->img_convert_ctx) < 0)
 				return;
 		}
 		else  if (RENDER_TYPE_DDRAW == _renderType)
@@ -1342,6 +1378,11 @@ static void video_image_display(VideoState *is)
 	if (RENDER_TYPE_D3D == _renderType)
 	{
 		d3dRender(_d3d, vp->frame->width, vp->frame->height, _window);
+	}
+	else if (RENDER_TYPE_D3D11 == _renderType)
+	{
+		d3d11Render(_d3d11, vp->frame->width, vp->frame->height, _window);
+
 	}
 	else  if (RENDER_TYPE_DDRAW == _renderType)
 	{
@@ -3579,7 +3620,7 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
 			}
 			else  if (RENDER_TYPE_DDRAW == _renderType && NULL != _ddraw)
 			{
-				//ddrawRender(_ddraw, , 0, 0, NULL);
+				ddrawRenderInternal(_ddraw);
 			}
 		}
         SDL_PumpEvents();
@@ -4175,7 +4216,9 @@ int ffplayPlay(HWND hWnd, const char *cmd, ...)
 		{
 			if (0 == strcmp("direct3d11" ,_render))
 			{
-
+				_d3d11 = (FFD3D11 *)malloc(sizeof(FFD3D11));
+				memset(_d3d11, 0, sizeof(FFD3D11));
+				_renderType = RENDER_TYPE_D3D11;
 			}
 			else 
 			{

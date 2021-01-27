@@ -32,6 +32,6 @@
 
 #define  CONFIG_INI   L"config.ini"
 
-static std::vector<std::string> _vecRender = { "direct3d", "directdraw" };
+static std::vector<std::string> _vecRender = { "direct3d11", "direct3d", "directdraw" };
 
 

@@ -89,6 +89,13 @@ bool CMainframe::playUrl(std::string &url)
 		_videoWnd->GetClientRect(rc);
 
 		_playWnd = _videoWnd->GetHwnd();
+
+		unsigned int nCmdShow = SW_SHOW;
+		unsigned int style = GetWindowLong(_playWnd, GWL_EXSTYLE);
+		if (style & WS_EX_NOACTIVATE) {
+			nCmdShow = SW_SHOWNOACTIVATE;
+		}
+		_videoWnd->Show(nCmdShow);
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 
 		//StartFFPLAY(std::string("c:\\ffmpeg_installed\\bin\\ffplay.exe"), std::string(cmdBuf));
@@ -270,7 +277,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 	else if ("open_file" == id)
 	{
 		std::string filePath;
-		if (QYFileStudio::openFileDialog(GetHwnd(), filePath, "Media Files (.mp4;.avi;.pch;.mkv;.rmvb;.flv)\0*.mp4;.avi;.pch;.mkv;.rmvb;.flv;\0All Files (*.*)\0*.*;\0"))
+		if (QYFileStudio::openFileDialog(GetHwnd(), filePath, "Media Files (.mp4;.avi;.pch;.mkv;.rmvb;.flv)\0*.mp4;*.avi;*.pch;*.mkv;*.rmvb;*.flv;\0All Files (*.*)\0*.*;\0"))
 		{
 			if (playFile(filePath))
 			{

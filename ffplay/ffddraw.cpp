@@ -27,7 +27,7 @@ void ddrawRelease(FFDDraw *ddraw,BOOL bRecreateDispBuffer)
 }
 
 
-BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreateDispBuffer)
+BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecreateDispBuffer)
 {
 	if (ddraw->m_bInitDD)
 	{
@@ -70,14 +70,12 @@ BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreate
 	hr = DirectDrawCreateEx(NULL, (VOID**)&ddraw->m_pDD, IID_IDirectDraw7, NULL);
 	if( FAILED(hr) )
 	{
-		//log("44444\n");
 		hr = DirectDrawCreateEx(NULL, (VOID**)&ddraw->m_pDD, IID_IDirectDraw4, NULL);
 		if( FAILED(hr) )
 		{
 			return FALSE;
 		}
 	}
-	//log("55555\n");
 	hr = ddraw->m_pDD->SetCooperativeLevel(ddraw->m_hWnd, DDSCL_NORMAL);
 	if(FAILED(hr))
 		return FALSE;
@@ -87,10 +85,8 @@ BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreate
 	hr = ddraw->m_pDD->GetCaps(&ddcap, NULL);
 	if(FAILED(hr))
 		return FALSE;
-	//log("66666\n");
 	if((ddcap.dwFXCaps & DDFXCAPS_BLTSTRETCHX) && (ddcap.dwFXCaps & DDFXCAPS_BLTSTRETCHY))
 	{
-		//caps = 100;
 		bBltStretchX = TRUE;
 	}
 	if(ddcap.dwCaps & DDCAPS_BLTFOURCC)
@@ -166,13 +162,9 @@ BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreate
 	}
 
 	if(!bRecreateDispBuffer)
-		//return TRUE;
+		return TRUE;
 
-	ZeroMemory(&ddpf, sizeof(DDPIXELFORMAT));
-	ddpf.dwSize = sizeof(DDPIXELFORMAT);
-	ddpf.dwFlags = DDPF_FOURCC;
-
-	ddpf.dwFourCC = MAKEFOURCC('Y', 'V', '1', '2');//使用YV12表面
+	
 
 #if 0
 	ddsd.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;     
@@ -215,6 +207,12 @@ BOOL ddrawCreate(FFDDraw *ddraw,HWND hWnd, int width, int height, BOOL bRecreate
 //	RGB表面
 	
 	// 试YUV表面		
+	ZeroMemory(&ddpf, sizeof(DDPIXELFORMAT));
+	ddpf.dwSize = sizeof(DDPIXELFORMAT);
+	ddpf.dwFlags = DDPF_FOURCC;
+
+	ddpf.dwFourCC = MAKEFOURCC('Y', 'V', '1', '2');//使用YV12表面
+
 	if(bBltFourCC && (capBackBuffer.dwCaps & DDSCAPS_VIDEOMEMORY))
 	{
 		ddsd.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT | DDSD_PIXELFORMAT;     
@@ -244,7 +242,7 @@ void restoreAllSurfaces(FFDDraw *ddraw)
 	{
 		if (hr == DDERR_WRONGMODE)
 		{
-			ddrawCreate(ddraw,ddraw->m_hWnd, ddraw->m_nImageWidth, ddraw->m_nImageHeight, FALSE);
+			ddrawReCreate(ddraw, ddraw->m_hWnd, ddraw->m_nImageWidth, ddraw->m_nImageHeight, FALSE);
 			return;
 		}
 	}
@@ -260,6 +258,14 @@ BOOL updateScreen(FFDDraw *ddraw)
 	HRESULT hr;
 	RECT rcDisplay;
 	GetWindowRect(ddraw->m_hWnd, &rcDisplay);
+
+
+	if (ddraw->m_rcBackBuffer.right - ddraw->m_rcBackBuffer.left != rcDisplay.right - rcDisplay.left
+		|| ddraw->m_rcBackBuffer.bottom - ddraw->m_rcBackBuffer.top != rcDisplay.bottom - rcDisplay.top)
+	{
+		ddraw->m_bInitDD = FALSE;
+		return FALSE;
+	}
 
 	if (ddraw->m_pddsBackBuffer == NULL)
 	{
@@ -341,11 +347,24 @@ int ddrawLockSurface(FFDDraw *ddraw, void **data, int *pitch)
 		return -1;
 	}
 
-	data[0] = ddsd.lpSurface;
-	data[1] = (char*)ddsd.lpSurface + 5*ddsd.dwHeight * ddsd.lPitch/4;
-	data[2] = (char*)ddsd.lpSurface +  ddsd.dwHeight * ddsd.lPitch ;
-	//data[3] = (char*)ddsd.lpSurface + 3 * ddsd.dwHeight * ddsd.lPitch ;
-
+	switch (ddraw->m_dispBufFormat)
+	{
+	case FORMAT_RGB32:
+	{
+		*data = ddsd.lpSurface;
+	}
+		break;
+	case FORMAT_YV12:
+	{
+		data[0] = ddsd.lpSurface;
+		data[1] = (char*)ddsd.lpSurface + 5 * ddsd.dwHeight * ddsd.lPitch / 4;
+		data[2] = (char*)ddsd.lpSurface + ddsd.dwHeight * ddsd.lPitch;
+	}
+		break;
+	default:
+		break;
+	}
+	
 	pitch[0] = ddsd.lPitch;
 
 	return 0;
@@ -361,6 +380,12 @@ void ddrawUnlockSurface(FFDDraw *ddraw)
 	
 }
 
+
+void ddrawRenderInternal(FFDDraw *ddraw)
+{
+	updateScreen(ddraw);
+}
+
 void ddrawRender(FFDDraw *ddraw, int width, int height, HWND hWnd)
 {
 	if (hWnd == NULL || !IsWindowVisible(hWnd))
@@ -370,7 +395,7 @@ void ddrawRender(FFDDraw *ddraw, int width, int height, HWND hWnd)
 
 	if (!ddraw->m_bInitDD)
 	{
-		ddraw->m_bInitDD = ddrawCreate(ddraw, hWnd, width, height, FALSE);
+		ddraw->m_bInitDD = ddrawReCreate(ddraw, hWnd, width, height, TRUE);
 		if (!ddraw->m_bInitDD)
 		{
 			return;
@@ -380,7 +405,7 @@ void ddrawRender(FFDDraw *ddraw, int width, int height, HWND hWnd)
 	if (ddraw->m_nImageWidth != width || ddraw->m_nImageHeight != height)
 	{
 		ddraw->m_bInitDD = FALSE;
-		ddraw->m_bInitDD = ddrawCreate(ddraw, hWnd, width, height, FALSE);
+		ddraw->m_bInitDD = ddrawReCreate(ddraw, hWnd, width, height, TRUE);
 		if (!ddraw->m_bInitDD)
 		{
 			return;

@@ -40,7 +40,7 @@ typedef struct
 #ifdef __cplusplus
 extern "C"{
 #endif
-	BOOL ddrawCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecreateDispBuffer);
+	BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecreateDispBuffer);
 	
 	int ddrawLockSurface(FFDDraw *ddraw, void **data, int *pitch);
 
@@ -48,6 +48,7 @@ extern "C"{
 
 	void ddrawRender(FFDDraw *ddraw, int width, int height,HWND hWnd);
 
+	void ddrawRenderInternal(FFDDraw *ddraw);
 #if 0
 	void ddrawRenderYUV(FFDDraw *ddraw, HWND hWnd, AVFrame *frame);
 #endif

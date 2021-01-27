@@ -36,6 +36,9 @@
     <ClInclude Include="ffddraw.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ffd3d11.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,6 +57,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ffplay.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ffd3d11.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
