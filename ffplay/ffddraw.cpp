@@ -36,8 +36,9 @@ BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecre
 			return TRUE;
 		}
 		
-		ddrawRelease(ddraw, TRUE);
 	}
+
+	ddrawRelease(ddraw, TRUE);
 
 
 	if(NULL == hWnd) 

@@ -3618,6 +3618,10 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
 			{
 				d3dRenderInternal(_d3d);
 			}
+			else  if (RENDER_TYPE_D3D11 == _renderType && NULL != _d3d11)
+			{
+				d3d11RenderInternal(_d3d11);
+			}
 			else  if (RENDER_TYPE_DDRAW == _renderType && NULL != _ddraw)
 			{
 				ddrawRenderInternal(_ddraw);

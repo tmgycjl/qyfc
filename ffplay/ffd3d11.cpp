@@ -67,8 +67,8 @@ int d3d11Create(FFD3D11 *d3d, HWND hWnd, int width, int height)
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(DXGI_SWAP_CHAIN_DESC));//填充
 	sd.BufferCount = 1;                              //我们只创建一个后缓冲（双缓冲）因此为1
-	sd.BufferDesc.Width = rcWidth;
-	sd.BufferDesc.Height = rcHeight;
+	sd.BufferDesc.Width = width;
+	sd.BufferDesc.Height = height;
 	sd.BufferDesc.Format = d3d->m_Format;
 	sd.BufferDesc.RefreshRate.Numerator = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;
@@ -116,8 +116,8 @@ int d3d11Create(FFD3D11 *d3d, HWND hWnd, int width, int height)
 	d3d->pImmediateContext->OMSetRenderTargets(1, &d3d->pRenderTargetView, NULL);
 
 	D3D11_VIEWPORT vp;
-	vp.Height = (FLOAT)rcHeight;
-	vp.Width = (FLOAT)rcWidth;
+	vp.Height = (FLOAT)height;
+	vp.Width = (FLOAT)width;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0;
@@ -152,6 +152,29 @@ int d3d11LockSurface(FFD3D11 *d3d, void **data, int *pitch)
 void d3d11UnlockSurface(FFD3D11 *d3d)
 {
 	return;
+}
+
+
+void d3d11RenderInternal(FFD3D11 *d3d)
+{
+	if (!d3d->_initD3D)
+	{
+		return;
+	}
+
+	RECT rcDisplay;
+	GetWindowRect(d3d->m_hWnd, &rcDisplay);
+
+
+	float ClearColor[4] = { 0.5f, 0.1f, 0.2f, 1.0f };
+	d3d->pImmediateContext->ClearRenderTargetView(d3d->pRenderTargetView, ClearColor);
+
+	ID3D11Texture2D* pBackBuffer;
+	d3d->pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+
+	d3d->pImmediateContext->UpdateSubresource(pBackBuffer, 0, NULL, d3d->pixel, d3d->_imageWidth * 4, 0);
+
+	d3d->pSwapChain->Present(0, 0);
 }
 
 void d3d11Render(FFD3D11 *d3d, int width, int height, HWND hWnd)

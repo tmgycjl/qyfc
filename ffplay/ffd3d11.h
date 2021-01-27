@@ -41,6 +41,7 @@ extern "C"{
 
 	void d3d11RenderInternal(FFD3D11 *d3d);
 
+
 	void d3d11Release(FFD3D11 *d3d);
 
 #ifdef __cplusplus

@@ -83,19 +83,16 @@ void CMainframe::saveRecentUrl()
 
 bool CMainframe::playUrl(std::string &url)
 {
-	if (nullptr != _videoWnd)
+	if (nullptr != _videoWidget)
 	{
-		QYRect rc;
-		_videoWnd->GetClientRect(rc);
-
-		_playWnd = _videoWnd->GetHwnd();
+		_playWnd = _videoWidget->GetHwnd();
 
 		unsigned int nCmdShow = SW_SHOW;
 		unsigned int style = GetWindowLong(_playWnd, GWL_EXSTYLE);
 		if (style & WS_EX_NOACTIVATE) {
 			nCmdShow = SW_SHOWNOACTIVATE;
 		}
-		_videoWnd->Show(nCmdShow);
+		_videoWidget->Show(nCmdShow);
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 
 		//StartFFPLAY(std::string("c:\\ffmpeg_installed\\bin\\ffplay.exe"), std::string(cmdBuf));
@@ -140,10 +137,10 @@ bool CMainframe::playUrl(std::string &url)
 
 bool CMainframe::playFile(std::string &filePath)
 {
-	if (nullptr != _videoWnd)
+	if (nullptr != _videoWidget)
 	{
 		char cmdBuf[1024] = { 0 };
-		_playWnd = _videoWnd->GetHwnd();
+		_playWnd = _videoWidget->GetHwnd();
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 
 		unsigned int nCmdShow = SW_SHOW;
@@ -152,7 +149,7 @@ bool CMainframe::playFile(std::string &filePath)
 			nCmdShow = SW_SHOWNOACTIVATE;
 		}
 
-		_videoWnd->Show(nCmdShow);
+		_videoWidget->Show(nCmdShow);
 		if (0 == ffplayPlay(_playWnd, "%s %s,%s %s,%s %s,%s %s,%s %s",
 			QYApp::getAppPath().c_str(),
 			"-render", _vecRender[iniFile.Get_int(L"setting", L"render", 0)].c_str(),
@@ -196,6 +193,8 @@ BOOL CMainframe::OnInitDialog()
 	if (nullptr != _videoWidget)
 	{
 		_videoWidget->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
+#if 0
+
 
 		_videoWnd = new QYStatic;
 		_videoWnd->CreateEx(WS_EX_NOACTIVATE, L"QYStatic", nullptr, WS_CHILD, 0, 0, 0, 0, _videoWidget);
@@ -208,6 +207,7 @@ BOOL CMainframe::OnInitDialog()
 			_videoWnd->SetBkColor(RGB(0, 0, 0));
 			_videoWnd->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
 		}
+#endif
 	}
 
 	_playProcess = (QYProgressCtrl*)getObjectPart("play_process");
@@ -344,7 +344,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 	else if ("stop" == id)
 	{
 		ffplayStop();
-		_videoWnd->Show(SW_HIDE);
+		_videoWidget->Show(SW_HIDE);
 		_pause = false;
 		_play->setImage("replay_play.png");
 		KillTimer(1);
@@ -472,10 +472,13 @@ void CMainframe::updateVideoSize()
 			rcDisplay.right -= off;
 		}
 
-		if (nullptr != _videoWnd)
-		{
-			_videoWnd->MoveWindow(rcDisplay);
-		}
+
+		//_videoWidget->MoveWindow(rcDisplay);
+
+// 		if (nullptr != _videoWnd)
+// 		{
+// 			_videoWnd->MoveWindow(rcWiget);
+// 		}
 	}
 }
 
