@@ -310,11 +310,11 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
                 const char *name, const size_t stacksize, void *data)
 #endif
 {
-    SDL_Thread *thread;
+	 SDL_Thread *thread;
     int ret;
 
     /* Allocate memory for the thread info structure */
-    thread = (SDL_Thread *) SDL_calloc(1, sizeof(*thread));
+    thread = (SDL_Thread*) SDL_calloc(1, sizeof(*thread));
     if (thread == NULL) {
         SDL_OutOfMemory();
         return NULL;

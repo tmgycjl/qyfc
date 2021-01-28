@@ -25,7 +25,7 @@
 
 #include "../../core/windows/SDL_windows.h"
 
-//typedef HANDLE SYS_ThreadHandle;
+typedef HANDLE SYS_ThreadHandle;
 
 #endif /* SDL_systhread_c_h_ */
 
