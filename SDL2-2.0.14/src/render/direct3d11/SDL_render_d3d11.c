@@ -2464,7 +2464,7 @@ D3D11_RenderPresent(SDL_Renderer * renderer)
      * This is a valid operation only when the existing contents will be entirely
      * overwritten. If dirty or scroll rects are used, this call should be removed.
      */
-    ID3D11DeviceContext1_DiscardView(data->d3dContext, (ID3D11View*)data->mainRenderTargetView);
+    //ID3D11DeviceContext1_DiscardView(data->d3dContext, (ID3D11View*)data->mainRenderTargetView);
 
     /* When the present flips, it unbinds the current view, so bind it again on the next draw call */
     data->currentRenderTargetView = NULL;

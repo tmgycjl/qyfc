@@ -83,16 +83,16 @@ void CMainframe::saveRecentUrl()
 
 bool CMainframe::playUrl(std::string &url)
 {
-	if (nullptr != _videoWidget)
+	if (nullptr != _videoWnd)
 	{
-		_playWnd = _videoWidget->GetHwnd();
+		_playWnd = _videoWnd->GetHwnd();
 
 		unsigned int nCmdShow = SW_SHOW;
 		unsigned int style = GetWindowLong(_playWnd, GWL_EXSTYLE);
 		if (style & WS_EX_NOACTIVATE) {
 			nCmdShow = SW_SHOWNOACTIVATE;
 		}
-		_videoWidget->Show(nCmdShow);
+		_videoWnd->Show(nCmdShow);
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 
 		//StartFFPLAY(std::string("c:\\ffmpeg_installed\\bin\\ffplay.exe"), std::string(cmdBuf));
@@ -137,10 +137,10 @@ bool CMainframe::playUrl(std::string &url)
 
 bool CMainframe::playFile(std::string &filePath)
 {
-	if (nullptr != _videoWidget)
+	if (nullptr != _videoWnd)
 	{
 		char cmdBuf[1024] = { 0 };
-		_playWnd = _videoWidget->GetHwnd();
+		_playWnd = _videoWnd->GetHwnd();
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 
 		unsigned int nCmdShow = SW_SHOW;
@@ -149,7 +149,7 @@ bool CMainframe::playFile(std::string &filePath)
 			nCmdShow = SW_SHOWNOACTIVATE;
 		}
 
-		_videoWidget->Show(nCmdShow);
+		_videoWnd->Show(nCmdShow);
 		if (0 == ffplayPlay(_playWnd, "%s %s,%s %s,%s %s,%s %s,%s %s",
 			QYApp::getAppPath().c_str(),
 			"-render", _vecRender[iniFile.Get_int(L"setting", L"render", 0)].c_str(),
@@ -193,7 +193,7 @@ BOOL CMainframe::OnInitDialog()
 	if (nullptr != _videoWidget)
 	{
 		_videoWidget->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
-#if 0
+#if 1
 
 
 		_videoWnd = new QYStatic;
@@ -201,6 +201,7 @@ BOOL CMainframe::OnInitDialog()
 		//_videoWnd = (QYStatic*)_videoWidget->Append("video_wnd", QY_CONTROL_TYPE_STATIC);
 		if (nullptr != _videoWnd)
 		{
+			_videoWnd->setID("video_wnd");
 			_videoWnd->SetWindowPos(HWND_NOTOPMOST, 0,0,0,0, SWP_NOCOPYBITS | SWP_NOZORDER | SWP_NOACTIVATE);
 
 			_videoWnd->Show(SW_HIDE);
@@ -214,12 +215,13 @@ BOOL CMainframe::OnInitDialog()
 	if (nullptr != _playProcess)
 	{
 		_playProcess->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
+		_playProcess->setReadonly(false);
 	}
 
 	_timeText = (QYStatic*)getObjectPart("play_time");
 	if (nullptr != _timeText)
 	{
-		_timeText->setWindowText("00:00/00:00");
+		_timeText->setWindowText("00:00:00/00:00:00");
 	}
 
 
@@ -272,6 +274,34 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 				::GetCursorPos(&pt);
 				m_pPopMenu->TrackPopup(QYPoint(pt.x, pt.y), 0, TPMENU_RIGHT_BOTTOM, this, true);
 			}
+		}
+		else if("lbuttondbclick" == propertyList->getValueWithDefaultString("action", ""))
+		{
+			
+			if (_fullScreen)
+			{
+
+				SetWindowPos(HWND_NOTOPMOST, _rcRestore, 0);
+			}
+			else
+			{
+				QYRect rcWiget;
+				_videoWidget->GetWindowRect(rcWiget);
+
+				GetWindowRect(_rcRestore);
+				int cxScreen = GetSystemMetrics(SM_CXSCREEN);
+				int cyScreen = GetSystemMetrics(SM_CYSCREEN);
+
+				int xOffset = rcWiget.left - _rcRestore.left;
+				int yOffset = rcWiget.top - _rcRestore.top;
+
+				cxScreen += _rcRestore.Width() - rcWiget.Width();
+				cyScreen += _rcRestore.Height() - rcWiget.Height();
+
+			
+				SetWindowPos(HWND_TOPMOST, 0 - xOffset, 0 - yOffset, cxScreen, cyScreen, 0);
+			}
+			_fullScreen = !_fullScreen;
 		}
 	}
 	else if ("open_file" == id)
@@ -336,7 +366,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 		}
 		else
 		{
-			_pause = ffplayIsPause();
+			_pause = (bool)ffplayIsPause();
 			ffplayPause();
 		}
 		
@@ -344,11 +374,12 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 	else if ("stop" == id)
 	{
 		ffplayStop();
-		_videoWidget->Show(SW_HIDE);
+		_videoWnd->Show(SW_HIDE);
+		_videoWnd->MoveWindow(0);
 		_pause = false;
 		_play->setImage("replay_play.png");
 		KillTimer(1);
-		_timeText->setWindowText("00:00/00:00");
+		_timeText->setWindowText("00:00:00/00:00:00");
 		_playProcess->SetRange(0);
 		_playProcess->SetPos(0);
 	}
@@ -357,6 +388,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 		SettingDlg dlg;
 		dlg.DoModal(this);
 	}
+	
 }
 
 void CMainframe::OnTimer(UINT_PTR nIDEvent)
@@ -366,13 +398,23 @@ void CMainframe::OnTimer(UINT_PTR nIDEvent)
 		int totalTime = 0;
 		int playTime = 0;
 		ffplayGetTime(&totalTime, &playTime);
-	
+		
+		if (!_lastOpenUrl && playTime >= totalTime)
+		{
+			QYPropertyList properties;
+			properties.addProperty("id", "stop");
+			onEvent(&properties);
+			return;
+		}
+
 		if (nullptr != _timeText)
 		{
 			char szTime[128] = { 0 };
 			if (0 < totalTime)
 			{
-				sprintf_s(szTime, 128, "%d:%d/%d:%d", playTime / 60, playTime % 60, totalTime / 60, totalTime % 60);
+				sprintf_s(szTime, 128, "%02d:%02d:%02d/%02d:%02d:%02d", 
+					playTime / 3600,(playTime%3600) / 60, playTime % 60, 
+					totalTime / 3600, (totalTime % 3600) / 60, totalTime % 60);
 				_timeText->setWindowText(szTime);
 			}
 		
@@ -455,6 +497,9 @@ void CMainframe::updateVideoSize()
 	{
 		QYRect rcWiget;
 		_videoWidget->GetClientRect(rcWiget);
+#if 0
+
+
 		QYRect rcDisplay = rcWiget;
 		float ratioImage = (float)_videoSize.cx / (float)_videoSize.cy;
 		float ratioWnd = (float)rcWiget.Width() / (float)rcWiget.Height();
@@ -471,20 +516,36 @@ void CMainframe::updateVideoSize()
 			rcDisplay.left += off;
 			rcDisplay.right -= off;
 		}
-
-
-		//_videoWidget->MoveWindow(rcDisplay);
-
-// 		if (nullptr != _videoWnd)
-// 		{
-// 			_videoWnd->MoveWindow(rcWiget);
-// 		}
+#endif
+ 		if (nullptr != _videoWnd)
+ 		{
+ 			_videoWnd->MoveWindow(rcWiget);
+ 		}
 	}
 }
 
 BOOL CMainframe::OnSize(UINT nType, int cx, int cy)
 {
 	QYDialog::OnSize(nType, cx, cy);
+#if 0
+
+
+	if (nullptr != _videoWidget)
+	{
+		QYRect rcWiget;
+		_videoWidget->GetClientRect(rcWiget);
+
+		RECT rc;
+		rc.left = rcWiget.left;
+		rc.right = rcWiget.right;
+		rc.top = rcWiget.top;
+		rc.bottom = rcWiget.bottom;
+
+		_videoWidget->PostMessage(WM_SIZE);
+
+		//ffplayVideoResize(&rc);
+	}
+#endif
 
 	updateVideoSize();
 

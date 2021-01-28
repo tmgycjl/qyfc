@@ -80,7 +80,7 @@
 #pragma  comment(lib,"avfilter")
 #pragma  comment(lib,"avdevice")
 
-#define  _USE_SDL_RENDER   0
+#define  _USE_SDL_RENDER   1
 
 #include "ffplay.h"
 
@@ -1178,6 +1178,7 @@ static int upload_d3d11_data(FFD3D11 *d3d, AVFrame *frame, struct SwsContext **i
 	{
 	case DXGI_FORMAT_R8G8B8A8_UNORM:
 	{
+
 		Uint32 sdl_pix_fmt;
 		*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
 			frame->width, frame->height, frame->format, frame->width, frame->height,
@@ -1312,6 +1313,12 @@ static void video_image_display(VideoState *is)
 		_imageHeight = vp->height;
 	}
 
+	SDL_Rect rc;
+	rc.x = 0;
+	rc.y = 0;
+	rc.w = is->width;
+	rc.h =  is->height;
+	SDL_RenderSetViewport(renderer,&rc);
     calculate_display_rect(&rect, is->xleft, is->ytop, is->width, is->height, vp->width, vp->height, vp->sar);
 
 #if _USE_SDL_RENDER
@@ -1705,13 +1712,16 @@ static int video_open(VideoState *is)
 
     if (!window_title)
         window_title = input_filename;
-    SDL_SetWindowTitle(window, window_title);
+#if _USE_SDL_RENDER
+	SDL_SetWindowTitle(window, window_title);
 
-    SDL_SetWindowSize(window, w, h);
-    SDL_SetWindowPosition(window, screen_left, screen_top);
-    if (is_full_screen)
-        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    SDL_ShowWindow(window);
+	SDL_SetWindowSize(window, w, h);
+	SDL_SetWindowPosition(window, screen_left, screen_top);
+	if (is_full_screen)
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	SDL_ShowWindow(window);
+#endif
+    
 
     is->width  = w;
     is->height = h;
@@ -1724,14 +1734,19 @@ static void video_display(VideoState *is)
 {
     if (!is->width)
         video_open(is);
-
+#if _USE_SDL_RENDER
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+#endif
+
     if (is->audio_st && is->show_mode != SHOW_MODE_VIDEO)
         video_audio_display(is);
     else if (is->video_st)
         video_image_display(is);
+
+#if _USE_SDL_RENDER
     SDL_RenderPresent(renderer);
+#endif
 }
 
 static double get_clock(Clock *c)
@@ -3850,6 +3865,7 @@ static void event_loop(VideoState *cur_stream)
                 case SDL_WINDOWEVENT_RESIZED:
                     screen_width  = cur_stream->width  = event.window.data1;
                     screen_height = cur_stream->height = event.window.data2;
+					
                     if (cur_stream->vis_texture) {
                         SDL_DestroyTexture(cur_stream->vis_texture);
                         cur_stream->vis_texture = NULL;
@@ -4168,6 +4184,8 @@ int ffplayPlay(HWND hWnd, const char *cmd, ...)
 
 	show_banner(argc, argv, options);
 
+	input_filename = NULL;
+
 	parse_options(NULL, argc, argv, options, opt_input_file);
 	if (!input_filename) {
 		show_usage();
@@ -4388,4 +4406,44 @@ void ffplayStop()
 
 	WaitForSingleObject(_threadPipHandle, INFINITE);
 	_threadPipHandle = NULL;
+
+	_imageWidth = 0;
+	_imageHeight = 0;
+	_totalTime = 0;
+	_playTime = 0;
+}
+
+
+void ffplayVideoResize(RECT *rect)
+{
+	
+#if 0
+
+	int x, y;
+	int w, h;
+
+	ClientToScreen(_window, (LPPOINT)rect);
+	ClientToScreen(_window, (LPPOINT)rect + 1);
+
+	x = rect->left;
+	y = rect->top;
+	SDL_Event ev2;
+	ev2.type = SDL_WINDOWEVENT;
+	ev2.window.data1 = x;
+	ev2.window.data2 = y;
+	ev2.window.event = SDL_WINDOWEVENT_MOVED;
+
+	SDL_PushEvent(&ev2);
+
+	SDL_Event ev;
+	ev.type = SDL_WINDOWEVENT;
+	ev.window.data1 = rect->right - rect->left;
+	ev.window.data2 = rect->bottom - rect->top;
+	ev.window.event = SDL_WINDOWEVENT_RESIZED;
+
+	SDL_PushEvent(&ev);
+
+	InvalidateRect(_window, NULL, FALSE);
+
+#endif
 }

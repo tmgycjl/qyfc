@@ -5,6 +5,161 @@
 #pragma  comment(lib,"d3d11")
 
 
+class DirectSystem
+{
+	//私有字段
+private:
+	//基础接口
+	ID3D11Device *m_pDevice;                    //DX设备接口，用于生成各种各样的对象
+	ID3D11DeviceContext *m_pDeviceContext;      //DX设备上下文,用于生成设备渲染指令
+
+	//视图区域
+	ID3D11RenderTargetView *m_pRenderTargetView;//DX渲染目标视图，字面意思
+	ID3D11DepthStencilView *m_pDepthStencilView;//DX深度模板缓存视图
+	ID3D11Texture2D        *m_pDepthStencil;    //深度模板缓存
+
+	//图形接口
+	IDXGISwapChain *m_pSwapChain;               //DX图形接口，交换链
+
+
+
+public:
+	DirectSystem()
+		:m_pDevice(NULL),
+		m_pDeviceContext(NULL),
+		m_pRenderTargetView(NULL),
+		m_pDepthStencilView(NULL),
+		m_pDepthStencil(NULL),
+		m_pSwapChain(NULL)
+	{
+
+	}
+
+	HRESULT Direct3D_Init(HWND hwnd, int WINDOW_WIDTH, int WINDOW_HEIGHT) {
+		//描述交换链
+		DXGI_SWAP_CHAIN_DESC scDesc;
+		::ZeroMemory(&scDesc, sizeof(scDesc));
+		scDesc.OutputWindow = hwnd;     //描述输出窗口
+		scDesc.BufferCount = 1;//缓存数量
+		scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;//描述后台缓存格式
+		scDesc.BufferDesc.Width = WINDOW_WIDTH; //描述后台缓存分辨率宽度
+		scDesc.BufferDesc.Height = WINDOW_HEIGHT;//描述后台缓存分辨率高度
+		scDesc.BufferDesc.RefreshRate.Denominator = 1;//刷新频率的分母
+		scDesc.BufferDesc.RefreshRate.Numerator = 60;//刷新频率的分子，这两项表明每秒刷新6次
+		scDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		scDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		scDesc.Flags = 0;
+		scDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		scDesc.SampleDesc.Count = 1;    //这里不使用多重采样，因此数量设为1
+		scDesc.SampleDesc.Quality = 0;  //不使用多重采样，设为0
+		scDesc.Windowed = true;         //设置为窗口模式
+
+		D3D_FEATURE_LEVEL featureLevels[] =
+		{
+			D3D_FEATURE_LEVEL_11_0,     //D3D11.0 所支持的功能特征
+			D3D_FEATURE_LEVEL_10_1,     //D3D10.1 所支持的功能特征
+			D3D_FEATURE_LEVEL_10_0      //D3D10.0 所支持的功能特征
+		};
+		UINT numFeature = ARRAYSIZE(featureLevels);
+
+		HRESULT te;
+		//创建设备，设备上下文，交换链
+		if (FAILED(te = D3D11CreateDeviceAndSwapChain(
+			NULL,
+			D3D_DRIVER_TYPE_HARDWARE, NULL, 0,
+			featureLevels, numFeature,
+			D3D11_SDK_VERSION, &scDesc,
+			&m_pSwapChain, &m_pDevice, NULL, &m_pDeviceContext)))
+		{
+			return E_FAIL;
+		}
+
+		//获取后台缓冲区
+		ID3D11Texture2D *pBack = NULL;
+		if (FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBack))) {
+			return E_FAIL;
+		}
+
+		//创建渲染目标视图
+		HRESULT hr;
+		hr = m_pDevice->CreateRenderTargetView(pBack, NULL, &m_pRenderTargetView);
+
+		SAFE_RELEASE(pBack);
+		if (FAILED(hr))
+		{
+			return E_FAIL;
+		}
+
+		//描述深度模板缓存
+		D3D11_TEXTURE2D_DESC dsDesc;
+		::ZeroMemory(&dsDesc, sizeof(dsDesc));
+		dsDesc.ArraySize = 1;
+		dsDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		dsDesc.CPUAccessFlags = 0;
+		dsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		dsDesc.Height = WINDOW_HEIGHT;
+		dsDesc.Width = WINDOW_WIDTH;
+		dsDesc.MipLevels = 1;
+		dsDesc.MiscFlags = 0;
+		dsDesc.SampleDesc.Count = 1;
+		dsDesc.SampleDesc.Quality = 0;
+		dsDesc.Usage = D3D11_USAGE_DEFAULT;
+
+		if (FAILED(m_pDevice->CreateTexture2D(&dsDesc, NULL, &m_pDepthStencil)))
+		{
+			return E_FAIL;
+		}
+
+		if (FAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencil, 0, &m_pDepthStencilView)))
+		{
+			return E_FAIL;
+		}
+
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+
+		//第四步，设置视口大小，D3D11默认不会设置视口，此步骤必须手动设置  
+		D3D11_VIEWPORT vp;    //创建一个视口的对象
+		vp.TopLeftX = 0;      //视口左上角的横坐标
+		vp.TopLeftY = 0;      //视口左上角的总坐标
+		vp.Width = WINDOW_WIDTH;     //视口的宽
+		vp.Height = WINDOW_HEIGHT;   //视口的高
+		vp.MinDepth = 0.0f;   //深度值的下限，**由于深度值是[0, 1]所以下限值是0
+		vp.MaxDepth = 1.0f;   //深度值的上限，上限值是1
+
+		m_pDeviceContext->RSSetViewports(1, &vp);
+
+		return S_OK;
+
+	}
+
+	void Direct3D_Render()
+	{
+		if (m_pDevice)
+		{
+			FLOAT color[4] = { 1.0f, 0.0f, 0.0f, 0.0f };
+			m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
+			m_pSwapChain->Present(NULL, NULL);
+		}
+
+	}
+
+	bool SetUp()
+	{
+		return true;
+	}
+
+	~DirectSystem()
+	{
+		SAFE_RELEASE(m_pDevice);
+		SAFE_RELEASE(m_pDeviceContext);
+		SAFE_RELEASE(m_pRenderTargetView);
+		SAFE_RELEASE(m_pDepthStencilView);
+		SAFE_RELEASE(m_pDepthStencil);
+		SAFE_RELEASE(m_pSwapChain);
+
+	}
+};
 
 int d3d11Create(FFD3D11 *d3d, HWND hWnd, int width, int height)
 {
@@ -109,21 +264,47 @@ int d3d11Create(FFD3D11 *d3d, HWND hWnd, int width, int height)
 		return -3;
 
 	hResult = d3d->pd3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &d3d->pRenderTargetView);
-
+	SAFE_RELEASE(pBackBuffer);
 	if (FAILED(hResult))
 		return -4;
 
-	d3d->pImmediateContext->OMSetRenderTargets(1, &d3d->pRenderTargetView, NULL);
+
+	//描述深度模板缓存
+	D3D11_TEXTURE2D_DESC dsDesc;
+	::ZeroMemory(&dsDesc, sizeof(dsDesc));
+	dsDesc.ArraySize = 1;
+	dsDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	dsDesc.CPUAccessFlags = 0;
+	dsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsDesc.Height = height;
+	dsDesc.Width = width;
+	dsDesc.MipLevels = 1;
+	dsDesc.MiscFlags = 0;
+	dsDesc.SampleDesc.Count = 1;
+	dsDesc.SampleDesc.Quality = 0;
+	dsDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	if (FAILED(d3d->pd3dDevice->CreateTexture2D(&dsDesc, NULL, &d3d->m_pDepthStencil)))
+	{
+		return E_FAIL;
+	}
+
+	if (FAILED(d3d->pd3dDevice->CreateDepthStencilView(d3d->m_pDepthStencil, 0, &d3d->m_pDepthStencilView)))
+	{
+		return E_FAIL;
+	}
+
+
+	d3d->pImmediateContext->OMSetRenderTargets(1, &d3d->pRenderTargetView, d3d->m_pDepthStencilView);
 
 	D3D11_VIEWPORT vp;
-	vp.Height = (FLOAT)height;
-	vp.Width = (FLOAT)width;
+	vp.Height = (FLOAT)rcHeight;
+	vp.Width = (FLOAT)rcWidth;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
 	d3d->pImmediateContext->RSSetViewports(1, &vp);
-
 
 	d3d->pixel = (unsigned char*)malloc(d3d->_imageWidth*d3d->_imageHeight * 4);
 
@@ -221,6 +402,9 @@ void d3d11Render(FFD3D11 *d3d, int width, int height, HWND hWnd)
 
 	float ClearColor[4] = { 0.5f, 0.1f, 0.2f, 1.0f }; 
 	d3d->pImmediateContext->ClearRenderTargetView(d3d->pRenderTargetView, ClearColor);
+
+	d3d->pImmediateContext->ClearDepthStencilView(d3d->m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
 
 
 	ID3D11Texture2D* pBackBuffer;

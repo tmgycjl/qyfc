@@ -218,7 +218,7 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, HWND parent, SDL_bool cre
         SetWindowLong(hwnd, GWL_WNDPROC, (LONG_PTR) WIN_WindowProc);
     }
 #endif
-#endif
+	#endif
     /* Fill in the SDL window with the window data */
     {
         RECT rect;
@@ -558,34 +558,30 @@ WIN_GetWindowBordersSize(_THIS, SDL_Window * window, int *top, int *left, int *b
 void
 WIN_ShowWindow(_THIS, SDL_Window * window)
 {
-	DWORD style;
-	HWND hwnd;
-	int nCmdShow;
+#if 0
 
-	hwnd = ((SDL_WindowData *)window->driverdata)->hwnd;
-	nCmdShow = SW_SHOW;
-	style = GetWindowLong(hwnd, GWL_EXSTYLE);
-	if (style & WS_EX_NOACTIVATE) {
-		nCmdShow = SW_SHOWNOACTIVATE;
-	}
 
-	ShowWindow(hwnd, nCmdShow);
-#if 1
-
-	
-   
-   
+    DWORD style;
+    HWND hwnd;
+    int nCmdShow;
+    
+    hwnd = ((SDL_WindowData *)window->driverdata)->hwnd;
+    nCmdShow = SW_SHOW;
+    style = GetWindowLong(hwnd, GWL_EXSTYLE);
+    if (style & WS_EX_NOACTIVATE) {
+        nCmdShow = SW_SHOWNOACTIVATE;
+    }
+    ShowWindow(hwnd, nCmdShow);
 #endif
 }
 
 void
 WIN_HideWindow(_THIS, SDL_Window * window)
 {
-	HWND hwnd = ((SDL_WindowData *) window->driverdata)->hwnd;
-#if 1
+#if 0
 
 
-   
+    HWND hwnd = ((SDL_WindowData *) window->driverdata)->hwnd;
     ShowWindow(hwnd, SW_HIDE);
 #endif
 }

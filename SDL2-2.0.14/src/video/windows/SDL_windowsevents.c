@@ -433,7 +433,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     SDL_WindowData *data;
     LRESULT returnCode = -1;
-	
+
     /* Send a SDL_SYSWMEVENT if the application wants them */
     if (SDL_GetEventState(SDL_SYSWMEVENT) == SDL_ENABLE) {
         SDL_SysWMmsg wmmsg;
@@ -467,7 +467,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     if (IME_HandleMessage(hwnd, msg, wParam, &lParam, data->videodata))
         return 0;
-
+	
     switch (msg) {
 
     case WM_SHOWWINDOW:
@@ -488,7 +488,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_ACTIVATE:
-        {
+	{ break;
             POINT cursorPos;
             BOOL minimized;
 
@@ -564,7 +564,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
 
     case WM_MOUSEMOVE:
-        {
+	{ break;
             SDL_Mouse *mouse = SDL_GetMouse();
             if (!mouse->relative_mode || mouse->relative_mode_warp) {
                 /* Only generate mouse events for real mouse */
@@ -601,7 +601,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_MBUTTONDBLCLK:
     case WM_XBUTTONDOWN:
     case WM_XBUTTONDBLCLK:
-        {
+	{ break;
             SDL_Mouse *mouse = SDL_GetMouse();
             if (!mouse->relative_mode || mouse->relative_mode_warp) {
                 if (GetMouseMessageSource() != SDL_MOUSE_EVENT_SOURCE_TOUCH &&
@@ -613,7 +613,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_INPUT:
-        {
+	{ break;
             SDL_Mouse *mouse = SDL_GetMouse();
             HRAWINPUT hRawInput = (HRAWINPUT)lParam;
             RAWINPUT inp;
@@ -691,7 +691,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_MOUSEWHEEL:
     case WM_MOUSEHWHEEL:
-        {
+	{ break;
             short amount = GET_WHEEL_DELTA_WPARAM(wParam);
             float fAmount = (float) amount / WHEEL_DELTA;
             if (msg == WM_MOUSEWHEEL)
@@ -702,7 +702,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
 
 #ifdef WM_MOUSELEAVE
-    case WM_MOUSELEAVE:
+	case WM_MOUSELEAVE: break;
         if (SDL_GetMouseFocus() == data->window && !SDL_GetMouse()->relative_mode && !(data->window->flags & SDL_WINDOW_MOUSE_CAPTURE)) {
             if (!IsIconic(hwnd)) {
                 SDL_Mouse *mouse;
@@ -729,7 +729,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
-        {
+	{ break;
             SDL_Scancode code = WindowsScanCodeToSDLScanCode(lParam, wParam);
             const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
@@ -751,7 +751,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_SYSKEYUP:
     case WM_KEYUP:
-        {
+	{ break;
             SDL_Scancode code = WindowsScanCodeToSDLScanCode(lParam, wParam);
             const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
@@ -773,7 +773,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         }
         /* otherwise fall through to below */
     case WM_CHAR:
-        {
+	{ break;
             char text[5];
             if (WIN_ConvertUTF32toUTF8((UINT32)wParam, text)) {
                 SDL_SendKeyboardText(text);
@@ -900,6 +900,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_WINDOWPOSCHANGED:
         {
+			
             RECT rect;
             int x, y;
             int w, h;
@@ -930,7 +931,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_SIZE:
-        {
+	{ break;
             switch (wParam) {
             case SIZE_MAXIMIZED:
                 SDL_SendWindowEvent(data->window,
@@ -1009,6 +1010,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_TOUCH:
+		break;
         if (data->videodata->GetTouchInputInfo && data->videodata->CloseTouchInputHandle) {
             UINT i, num_inputs = LOWORD(wParam);
             SDL_bool isstack;

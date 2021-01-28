@@ -5,7 +5,7 @@
 	<process id="play_process" color="0,0,0,255,255,0" rel1="0.0,1.0" rel2="1.0,1.0" offset1="2,-48" offset2="-2,-42" />
 	<button  id="play" image="replay_play.png" rel1="0,1" rel2="0,1" offset1="6,-38" offset2="38,-6"/>
 	<button  id="stop" image="replay_stop.png" leftto="play RIGHT" topto="play TOP" bottomto="play BOTTOM" offset1="6,0" offset2="38,0"/>
-	<static  id="play_time" text="10:10/102:32"  rel1="1.0,1.0" rel2="1.0,1.0" offset1="-80,-38" offset2="-6,-6"/>
+	<static  id="play_time" text="00:00:00/00:00:00"  rel1="1.0,1.0" rel2="1.0,1.0" offset1="-120,-38" offset2="-6,-6"/>
 	<button  id="setting" image="tool_local_config.png" leftto="play_time LEFT" rightto="play_time LEFT" topto="play TOP" bottomto="play BOTTOM" offset1="-40,0" offset2="-8,0"/>
 </group> 
  <group id="url_dlg" text="OPEN_URL" size="600,400">

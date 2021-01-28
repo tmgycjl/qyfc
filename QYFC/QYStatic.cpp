@@ -79,6 +79,18 @@ LRESULT QYStatic::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 		break;
+	case WM_LBUTTONDBLCLK:
+	{
+		struct w_funcCB_t *actionCB = getCallback(QY_CALLBACK_EVENT);
+		if (nullptr != actionCB)
+		{
+			QYPropertyList properties;
+			properties.addProperty("id", getID());
+			properties.addProperty("action", "lbuttondbclick");
+			actionCB->callback(&properties);
+		}
+	}
+	break;
 	default:break;
 	}
 	return FALSE;

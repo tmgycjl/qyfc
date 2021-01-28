@@ -6,12 +6,40 @@
 #pragma comment(lib, "ddraw.lib") 
 #pragma comment(lib, "dxguid.lib")
 
+
+void calculateDisplayRect(RECT *rect, int width, int height)
+{
+	float rcW = rect->right - rect->left;
+	float rcH = rect->bottom - rect->top;
+	float ratioImage = (float)width / (float)height;
+	float ratioWnd = (float)rcW / (float)rcH;
+	float off = 0;
+	float realXY = 0;
+	if (ratioImage > ratioWnd)
+	{
+		realXY = rcW / ratioImage;
+
+		off = (rcH - realXY) / 2;
+		rect->top += off;
+		rect->bottom = rect->top + realXY;
+	}
+	else
+	{
+		realXY = rcH * ratioImage;
+
+		off = (rcW - realXY) / 2;
+		rect->left += off;
+		rect->right = rect->left + realXY;
+	}
+}
+
 void ddrawRelease(FFDDraw *ddraw,BOOL bRecreateDispBuffer)
 {
 	SAFE_RELEASE(ddraw->m_pddColorCtrl);
 	if (bRecreateDispBuffer)
 		SAFE_RELEASE(ddraw->m_pddsDispBuffer);
 	SAFE_RELEASE(ddraw->m_pddsBackBuffer);
+	SAFE_RELEASE(ddraw->m_pddsBKBuffer);
 	SAFE_RELEASE(ddraw->m_pddsFrontBuffer);
 	SAFE_RELEASE(ddraw->m_pDD);	
 
@@ -38,7 +66,7 @@ BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecre
 		
 	}
 
-	ddrawRelease(ddraw, TRUE);
+	ddrawRelease(ddraw, bRecreateDispBuffer);
 
 
 	if(NULL == hWnd) 
@@ -49,19 +77,35 @@ BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecre
 	ddraw->m_nImageWidth = width;
 	ddraw->m_nImageHeight = height;
 
+	
 	ddraw->m_rcDispBuffer.left = ddraw->m_rcDispBuffer.top = 0;
 	ddraw->m_rcDispBuffer.right = ddraw->m_nImageWidth;
 	ddraw->m_rcDispBuffer.bottom = ddraw->m_nImageHeight;
 
 
 	RECT rect;
-	if( !GetWindowRect(ddraw->m_hWnd, &rect) )
+	if( !GetWindowRect(ddraw->m_hWnd, &ddraw->lastRealRcDisplay) )
 	{
 		return FALSE;
 	}
+
+	ddraw->lastRcDisplay.left = ddraw->lastRealRcDisplay.left;
+	ddraw->lastRcDisplay.top = ddraw->lastRealRcDisplay.top;
+	ddraw->lastRcDisplay.right = ddraw->lastRealRcDisplay.right;
+	ddraw->lastRcDisplay.bottom = ddraw->lastRealRcDisplay.bottom;
+
+	ddraw->m_rcBkBuffer.left = ddraw->m_rcBkBuffer.top = 0;
+	ddraw->m_rcBkBuffer.right = ddraw->lastRcDisplay.right - ddraw->lastRcDisplay.left;
+	ddraw->m_rcBkBuffer.bottom = ddraw->lastRcDisplay.bottom - ddraw->lastRcDisplay.top;
+
+	
+	calculateDisplayRect(&ddraw->lastRealRcDisplay, width, height);
+
+
 	ddraw->m_rcBackBuffer.left = ddraw->m_rcBackBuffer.top = 0;
-	ddraw->m_rcBackBuffer.right = rect.right - rect.left;
-	ddraw->m_rcBackBuffer.bottom = rect.bottom - rect.top;
+	ddraw->m_rcBackBuffer.right = ddraw->lastRealRcDisplay.right - ddraw->lastRealRcDisplay.left;
+	ddraw->m_rcBackBuffer.bottom = ddraw->lastRealRcDisplay.bottom - ddraw->lastRealRcDisplay.top;
+
 	
 	HRESULT hr;
 	DDCAPS ddcap;
@@ -162,6 +206,27 @@ BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecre
 		return FALSE;
 	}
 
+
+	ZeroMemory(&ddsd, sizeof(ddsd));
+	ddsd.dwSize = sizeof(ddsd);
+	ddsd.dwFlags = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
+	ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+	ddsd.dwWidth = ddraw->lastRcDisplay.right;
+	ddsd.dwHeight = ddraw->lastRcDisplay.bottom;
+	hr = ddraw->m_pDD->CreateSurface(&ddsd, &ddraw->m_pddsBKBuffer, NULL);
+	if (hr != DD_OK)
+	{
+		return FALSE;
+	}
+
+
+	hr = ddraw->m_pddsBKBuffer->GetCaps(&capBackBuffer);
+	if (hr != DD_OK)
+	{
+		return FALSE;
+	}
+
+
 	if(!bRecreateDispBuffer)
 		return TRUE;
 
@@ -257,42 +322,44 @@ void restoreAllSurfaces(FFDDraw *ddraw)
 BOOL updateScreen(FFDDraw *ddraw)
 {
 	HRESULT hr;
-	RECT rcDisplay;
-	GetWindowRect(ddraw->m_hWnd, &rcDisplay);
 
+	GetWindowRect(ddraw->m_hWnd, &ddraw->lastRealRcDisplay);
 
-	if (ddraw->m_rcBackBuffer.right - ddraw->m_rcBackBuffer.left != rcDisplay.right - rcDisplay.left
-		|| ddraw->m_rcBackBuffer.bottom - ddraw->m_rcBackBuffer.top != rcDisplay.bottom - rcDisplay.top)
+	
+
+	if (ddraw->lastRcDisplay.right - ddraw->lastRcDisplay.left != ddraw->lastRealRcDisplay.right - ddraw->lastRealRcDisplay.left
+		|| ddraw->lastRcDisplay.bottom - ddraw->lastRcDisplay.top != ddraw->lastRealRcDisplay.bottom - ddraw->lastRealRcDisplay.top)
 	{
+		ddraw->lastRcDisplay.left = ddraw->lastRealRcDisplay.left;
+		ddraw->lastRcDisplay.top = ddraw->lastRealRcDisplay.top;
+		ddraw->lastRcDisplay.right = ddraw->lastRealRcDisplay.right;
+		ddraw->lastRcDisplay.bottom = ddraw->lastRealRcDisplay.bottom;
+
 		ddraw->m_bInitDD = FALSE;
-		return FALSE;
+		ddraw->m_bInitDD = ddrawReCreate(ddraw, ddraw->m_hWnd, ddraw->m_nImageWidth, ddraw->m_nImageHeight, FALSE);
+		if (!ddraw->m_bInitDD)
+		{
+			return FALSE;
+		}
+	}
+	else
+	{
+		ddraw->lastRcDisplay.left = ddraw->lastRealRcDisplay.left;
+		ddraw->lastRcDisplay.top = ddraw->lastRealRcDisplay.top;
+		ddraw->lastRcDisplay.right = ddraw->lastRealRcDisplay.right;
+		ddraw->lastRcDisplay.bottom = ddraw->lastRealRcDisplay.bottom;
 	}
 
 	if (ddraw->m_pddsBackBuffer == NULL)
 	{
 		return FALSE;
 	}
-#if 0
+
+	
+
+	calculateDisplayRect(&ddraw->lastRealRcDisplay, ddraw->m_nImageWidth, ddraw->m_nImageHeight);
 
 
-	int rcW = rcDisplay.right - rcDisplay.left;
-	int rcH = rcDisplay.bottom - rcDisplay.top;
-	float ratioImage = (float)ddraw->m_nImageWidth / (float)ddraw->m_nImageHeight;
-	float ratioWnd = (float)rcW / (float)rcH;
-	int off = 0;
-	if (ratioImage  > ratioWnd)
-	{
-		 off = (rcH - (rcW / ratioImage)) / 2;
-		rcDisplay.top += off;
-		rcDisplay.bottom -= off;
-	}
-	else
-	{
-		off = (rcW - rcH * ratioImage) / 2;
-		rcDisplay.left += off;
-		rcDisplay.right -= off;
-	}
-#endif
 	hr = ddraw->m_pddsBackBuffer->Blt(&ddraw->m_rcBackBuffer, ddraw->m_pddsDispBuffer, &ddraw->m_rcDispBuffer, DDBLT_WAIT, NULL);
 
 	if (hr == DDERR_SURFACELOST)
@@ -306,7 +373,15 @@ BOOL updateScreen(FFDDraw *ddraw)
 		return FALSE;
 	}
 
-	hr = ddraw->m_pddsFrontBuffer->Blt(&rcDisplay, ddraw->m_pddsBackBuffer, &ddraw->m_rcBackBuffer, DDBLT_WAIT, NULL);
+	DDBLTFX  bltfx;
+	ZeroMemory(&bltfx, sizeof(DDBLTFX));
+	bltfx.dwSize = sizeof(DDBLTFX);
+	bltfx.dwFillColor = RGB(0, 0, 0);
+	hr = ddraw->m_pddsBKBuffer->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &bltfx);
+	
+	hr = ddraw->m_pddsFrontBuffer->Blt(&ddraw->lastRcDisplay, ddraw->m_pddsBKBuffer, &ddraw->m_rcBkBuffer, DDBLT_WAIT, NULL);
+
+	hr = ddraw->m_pddsFrontBuffer->Blt(&ddraw->lastRealRcDisplay, ddraw->m_pddsBackBuffer, &ddraw->m_rcBackBuffer, DDBLT_WAIT, NULL);
 
 
 	if (hr == DDERR_SURFACELOST)
@@ -406,7 +481,7 @@ void ddrawRender(FFDDraw *ddraw, int width, int height, HWND hWnd)
 	if (ddraw->m_nImageWidth != width || ddraw->m_nImageHeight != height)
 	{
 		ddraw->m_bInitDD = FALSE;
-		ddraw->m_bInitDD = ddrawReCreate(ddraw, hWnd, width, height, TRUE);
+		ddraw->m_bInitDD = ddrawReCreate(ddraw, hWnd, width, height, FALSE);
 		if (!ddraw->m_bInitDD)
 		{
 			return;

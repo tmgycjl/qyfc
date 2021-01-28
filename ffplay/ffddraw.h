@@ -18,10 +18,12 @@ typedef struct
     LPDIRECTDRAW7			m_pDD;
 	LPDIRECTDRAWSURFACE7		m_pddsFrontBuffer;
 	LPDIRECTDRAWSURFACE7		m_pddsBackBuffer;
+	LPDIRECTDRAWSURFACE7		m_pddsBKBuffer;
 	LPDIRECTDRAWSURFACE7		m_pddsDispBuffer;
 	LPDIRECTDRAWCOLORCONTROL	m_pddColorCtrl;
 	RECT					m_rcBackBuffer;
 	RECT					m_rcDispBuffer;
+	RECT					m_rcBkBuffer;
 	BOOL					m_bInitDD;                    
 	HWND					m_hWnd;
 	BOOL					m_bTryOverlay;
@@ -33,7 +35,8 @@ typedef struct
     int					m_nImageWidth;
 	int					m_nImageHeight;	
 	struct SwsContext *img_convert_ctx;
-
+	RECT lastRcDisplay;
+	RECT lastRealRcDisplay;
 }FFDDraw;
 
 

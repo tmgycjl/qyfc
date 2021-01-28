@@ -48,3 +48,5 @@
 
 	FFPLAY_DLLAPI void ffplayStop();
 
+	FFPLAY_DLLAPI void ffplayVideoResize(RECT *rect);
+

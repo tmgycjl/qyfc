@@ -37,7 +37,6 @@ BOOL UrlDlg::OnInitDialog()
 	}
 
 
-
 	m_eventCB.callback = std::bind(&UrlDlg::onEvent, this, std::placeholders::_1);
 
 
@@ -97,7 +96,7 @@ void UrlDlg::onEvent(QYPropertyList *propertyList)
 	}
 	else if ("history_url" == id)
 	{
-		if ("double_click" == propertyList->getValueWithDefaultString("action", ""))
+		if ("click" == propertyList->getValueWithDefaultString("action", ""))
 		{
 			QYTreeCtrl *urlTree = (QYTreeCtrl*)getObjectPart("history_url");
 			if (nullptr != urlTree)
@@ -114,6 +113,16 @@ void UrlDlg::onEvent(QYPropertyList *propertyList)
 				
 
 			}
+		}
+		else if ("double_click" == propertyList->getValueWithDefaultString("action", ""))
+		{
+			QYEdit *edit_url = (QYEdit*)getObjectPart("edit_url");
+			if (nullptr != edit_url)
+			{
+				edit_url->getText(_url);
+				EndDialog(IDOK);
+			}
+
 		}
 	}
 }

@@ -11,6 +11,7 @@ protected:
 	 BOOL OnPaint();
 	 LRESULT OnNCPaint();
 public:
+	void setReadonly(bool readOnly = true);
 	BOOL Create(DWORD dwExStyle,
 		LPCTSTR lpClassName,
 		LPCTSTR lpWndName,
@@ -23,11 +24,17 @@ public:
 	void SetRange(int range);
 	int GetRange();
 private:
+	LRESULT OnMouseMove(UINT nFlags, QYPoint &point);
+	LRESULT OnMouseLeave(WPARAM wparam, LPARAM lparam);
+	LRESULT OnLButtonDown(UINT nFlags, QYPoint point);
+	LRESULT OnLButtonUp(UINT nFlags, QYPoint point);
 	int m_nRange;
 	int m_nPos;
 	BOOL     m_bHover;
 	COLORREF m_BkCor;
 	COLORREF m_GrooveBkCor;
 	COLORREF m_ProcessBkCor;
+	bool _readOnly = true;
+	bool _hover = false;
 };
 

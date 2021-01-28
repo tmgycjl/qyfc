@@ -33,7 +33,7 @@ private:
 	QYMenu *m_pPopMenu = nullptr;
 	std::list<std::string>  _listRecentUrl;
 	HWND _playWnd = nullptr;
-	//QYStatic *_videoWnd = nullptr;
+	QYStatic *_videoWnd = nullptr;
 	QYWidget *_videoWidget = nullptr;
 	QYProgressCtrl *_playProcess = nullptr;
 	QYStatic *_timeText = nullptr;
@@ -44,6 +44,7 @@ private:
 	bool _pause = false;
 	std::string _lastFilePath;
 	QYSize _videoSize ;
-
+	QYRect _rcRestore;
+	bool   _fullScreen = false;
 };
 

@@ -15,6 +15,8 @@ typedef struct
 	IDXGISwapChain *pSwapChain ;                               
 	ID3D11RenderTargetView *pRenderTargetView ;   
 	ID3D11Texture2D *pBackBuffer;
+	ID3D11DepthStencilView *m_pDepthStencilView;//DX深度模板缓存视图
+	ID3D11Texture2D        *m_pDepthStencil;    //深度模板缓存
 	HWND m_hWnd;
 	DXGI_FORMAT m_Format;
 	LPD3DXFONT m_p2Dfont;
