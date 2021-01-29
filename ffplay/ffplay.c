@@ -1700,7 +1700,6 @@ static void set_default_window_size(int width, int height, AVRational sar)
 static int video_open(VideoState *is)
 {
     int w,h;
-        printf("screen_width:%d,screen_height:%d\n",screen_width,screen_height);
 
     if (screen_width) {
         w = screen_width;
@@ -3860,8 +3859,8 @@ static void event_loop(VideoState *cur_stream)
 		}
 			break;
         case SDL_WINDOWEVENT:
-            printf("event.window.event:%d\n",event.window.event);
-            switch (event.window.event) {
+            switch (event.window.event)
+			{
                 case SDL_WINDOWEVENT_RESIZED:
                     screen_width  = cur_stream->width  = event.window.data1;
                     screen_height = cur_stream->height = event.window.data2;
@@ -3871,6 +3870,8 @@ static void event_loop(VideoState *cur_stream)
                         cur_stream->vis_texture = NULL;
                     }
                     cur_stream->force_refresh = 1;
+					SDL_SetWindowSize(window,cur_stream->width, cur_stream->height);
+
                 /*case SDL_WINDOWEVENT_EXPOSED:
                     {
                         //screen_width  = cur_stream->width  = event.window.data1;
@@ -4434,7 +4435,7 @@ void ffplayVideoResize(RECT *rect)
 	ev2.window.event = SDL_WINDOWEVENT_MOVED;
 
 	SDL_PushEvent(&ev2);
-
+#endif
 	SDL_Event ev;
 	ev.type = SDL_WINDOWEVENT;
 	ev.window.data1 = rect->right - rect->left;
@@ -4444,6 +4445,4 @@ void ffplayVideoResize(RECT *rect)
 	SDL_PushEvent(&ev);
 
 	InvalidateRect(_window, NULL, FALSE);
-
-#endif
 }

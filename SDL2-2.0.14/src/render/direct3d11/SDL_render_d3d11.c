@@ -2250,6 +2250,7 @@ D3D11_RunCommandQueue(SDL_Renderer * renderer, SDL_RenderCommand *cmd, void *ver
                     (cmd->data.color.b / 255.0f),
                     (cmd->data.color.a / 255.0f)
                 };
+
                 ID3D11DeviceContext_ClearRenderTargetView(rendererData->d3dContext, D3D11_GetCurrentRenderTargetView(renderer), colorRGBA);
                 break;
             }

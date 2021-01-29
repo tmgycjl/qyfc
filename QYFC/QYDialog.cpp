@@ -483,7 +483,7 @@ BOOL QYDialog::OnInitDialog()
 		//m_disableMinBox = !(style&WS_MINIMIZEBOX);
 		//m_bSizeBox = (style&WS_SIZEBOX);
 
-		m_nSizeBoxWidth = m_FrameWidth;
+//		m_nSizeBoxWidth = m_FrameWidth;
 #if 0
 		m_pCaptionBkImage = new QYPicture;
 		m_pCaptionBkImage->Load(IDP_CAPTION_BK,QY_IMAGE_PNG);

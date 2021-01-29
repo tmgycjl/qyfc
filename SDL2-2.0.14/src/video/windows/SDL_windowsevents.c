@@ -900,7 +900,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_WINDOWPOSCHANGED:
         {
-			
+			break;
             RECT rect;
             int x, y;
             int w, h;

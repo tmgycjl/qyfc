@@ -520,6 +520,20 @@ void CMainframe::updateVideoSize()
  		if (nullptr != _videoWnd)
  		{
  			_videoWnd->MoveWindow(rcWiget);
+
+
+				QYRect rcVideoWnd;
+				_videoWnd->GetClientRect(rcVideoWnd);
+
+				RECT rc;
+				rc.left = rcVideoWnd.left;
+				rc.right = rcVideoWnd.right;
+				rc.top = rcVideoWnd.top;
+				rc.bottom = rcVideoWnd.bottom;
+
+				ffplayVideoResize(&rc);
+			
+
  		}
 	}
 }
@@ -527,27 +541,15 @@ void CMainframe::updateVideoSize()
 BOOL CMainframe::OnSize(UINT nType, int cx, int cy)
 {
 	QYDialog::OnSize(nType, cx, cy);
-#if 0
+#if 1
 
 
-	if (nullptr != _videoWidget)
-	{
-		QYRect rcWiget;
-		_videoWidget->GetClientRect(rcWiget);
-
-		RECT rc;
-		rc.left = rcWiget.left;
-		rc.right = rcWiget.right;
-		rc.top = rcWiget.top;
-		rc.bottom = rcWiget.bottom;
-
-		_videoWidget->PostMessage(WM_SIZE);
-
-		//ffplayVideoResize(&rc);
-	}
+	
 #endif
 
 	updateVideoSize();
+
+
 
 	return TRUE;
 }
