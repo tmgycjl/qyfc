@@ -63,6 +63,10 @@
 #endif
 
 
+#include "../MyMediaFile/MyMediaFile.h"
+
+#pragma  comment(lib,"MyMediaFile")
+
 
 #include "ffddraw.h"
 #include "ffd3d.h"
@@ -3124,6 +3128,10 @@ static int is_realtime(AVFormatContext *s)
 /* this thread gets the stream from the disk or the network */
 static int read_thread(void *arg)
 {
+	MyMediaFile myMediaoFile;
+
+	memset(&myMediaoFile, 0, sizeof(MyMediaFile));
+
     VideoState *is = arg;
     AVFormatContext *ic = NULL;
     int err, i, ret;
@@ -3161,7 +3169,13 @@ static int read_thread(void *arg)
         scan_all_pmts_set = 1;
     }
     err = avformat_open_input(&ic, is->filename, is->iformat, &format_opts);
-    if (err < 0) {
+    if (err < 0)
+	{
+		if (!myMediaFileOpen(&myMediaoFile,is->filename))
+		{
+			goto _try_read_my_media_file;
+		}
+
         print_error(is->filename, err); 
         ret = -1;
         goto fail;
@@ -3442,6 +3456,166 @@ static int read_thread(void *arg)
     }
     SDL_DestroyMutex(wait_mutex);
     return 0;
+
+_try_read_my_media_file:
+	
+	is->video_stream = 0;
+	
+	is->audio_stream = 1;
+	
+
+	ic = (AVFormatContext *)malloc(sizeof(AVFormatContext));
+	memset(ic, 0, sizeof(AVFormatContext));
+
+	ic->streams = (AVStream **)malloc(sizeof(AVStream*)*2);
+	
+
+	ic->streams[0] = (AVStream *)malloc(sizeof(AVStream));
+	memset(ic->streams[0], 0, sizeof(AVStream));
+
+	ic->streams[1] = (AVStream *)malloc(sizeof(AVStream));
+	memset(ic->streams[1], 0, sizeof(AVStream));
+
+	is->audio_st = ic->streams[is->audio_stream];
+	is->video_st = ic->streams[is->video_stream];
+
+	AVCodec *codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+
+	AVCodecContext *avCtx = avcodec_alloc_context3(codec);
+	if (NULL == avCtx)
+	{
+		return FALSE;
+	}
+
+	decoder_init(&is->viddec, avCtx, &is->videoq, is->continue_read_thread);
+	if ((ret = decoder_start(&is->viddec, video_thread, is)) < 0)
+		goto fail2;
+	is->queue_attachments_req = 1;
+
+	pkt = &pkt1;
+
+	for (;;) {
+		if (is->abort_request)
+			break;
+		if (is->paused != is->last_paused) {
+			is->last_paused = is->paused;
+			if (is->paused)
+				is->read_pause_return = av_read_pause(ic);
+			else
+				av_read_play(ic);
+		}
+
+		if (is->seek_req) 
+		{
+			int64_t seek_target = is->seek_pos;
+			int64_t seek_min = is->seek_rel > 0 ? seek_target - is->seek_rel + 2 : INT64_MIN;
+			int64_t seek_max = is->seek_rel < 0 ? seek_target - is->seek_rel - 2 : INT64_MAX;
+
+			{
+				if (is->audio_stream >= 0) {
+					packet_queue_flush(&is->audioq);
+					packet_queue_put(&is->audioq, &flush_pkt);
+				}
+				if (is->video_stream >= 0) {
+					packet_queue_flush(&is->videoq);
+					packet_queue_put(&is->videoq, &flush_pkt);
+				}
+				if (is->seek_flags & AVSEEK_FLAG_BYTE) {
+					set_clock(&is->extclk, NAN, 0);
+				}
+				else {
+					set_clock(&is->extclk, seek_target / (double)AV_TIME_BASE, 0);
+				}
+			}
+			is->seek_req = 0;
+			is->queue_attachments_req = 1;
+			is->eof = 0;
+			if (is->paused)
+				step_to_next_frame(is);
+		}
+		if (is->queue_attachments_req) 
+		{
+			
+			is->queue_attachments_req = 0;
+		}
+
+		/* if the queue are full, no need to read more */
+		if (infinite_buffer<1 &&
+			(is->audioq.size + is->videoq.size + is->subtitleq.size > MAX_QUEUE_SIZE))
+		{
+			/* wait 10 ms */
+			SDL_LockMutex(wait_mutex);
+			SDL_CondWaitTimeout(is->continue_read_thread, wait_mutex, 10);
+			SDL_UnlockMutex(wait_mutex);
+			continue;
+		}
+		if (!is->paused &&
+			(!is->audio_st || (is->auddec.finished == is->audioq.serial && frame_queue_nb_remaining(&is->sampq) == 0)) &&
+			(!is->video_st || (is->viddec.finished == is->videoq.serial && frame_queue_nb_remaining(&is->pictq) == 0))) {
+			if (loop != 1 && (!loop || --loop)) 
+			{
+				stream_seek(is, start_time != AV_NOPTS_VALUE ? start_time : 0, 0, 0);
+			}
+			else if (autoexit) 
+			{
+				ret = AVERROR_EOF;
+				goto fail2;
+			}
+		}
+
+		pkt->data = myMediaoFile.m_pBuffer;
+
+		ret = myMediaFileReadFrame(&myMediaoFile, pkt);
+		if (ret < 0) 
+		{
+			if ((ret == AVERROR_EOF || avio_feof(ic->pb)) && !is->eof) {
+				if (is->video_stream >= 0)
+					packet_queue_put_nullpacket(&is->videoq, is->video_stream);
+				if (is->audio_stream >= 0)
+					packet_queue_put_nullpacket(&is->audioq, is->audio_stream);
+				if (is->subtitle_stream >= 0)
+					packet_queue_put_nullpacket(&is->subtitleq, is->subtitle_stream);
+				is->eof = 1;
+			}
+			if (ic->pb && ic->pb->error)
+				break;
+			SDL_LockMutex(wait_mutex);
+			SDL_CondWaitTimeout(is->continue_read_thread, wait_mutex, 10);
+			SDL_UnlockMutex(wait_mutex);
+			continue;
+		}
+		else
+		{
+			is->eof = 0;
+		}
+		/* check if packet is in play range specified by user, then queue, otherwise discard */
+		stream_start_time = ic->streams[pkt->stream_index]->start_time;
+		pkt_ts = pkt->pts == AV_NOPTS_VALUE ? pkt->dts : pkt->pts;
+		pkt_in_play_range = duration == AV_NOPTS_VALUE ||
+			(pkt_ts - (stream_start_time != AV_NOPTS_VALUE ? stream_start_time : 0)) *
+			av_q2d(ic->streams[pkt->stream_index]->time_base) -
+			(double)(start_time != AV_NOPTS_VALUE ? start_time : 0) / 1000000
+			<= ((double)duration / 1000000);
+		if (pkt->stream_index == is->audio_stream && pkt_in_play_range) {
+			packet_queue_put(&is->audioq, pkt);
+		}
+		else if (pkt->stream_index == is->video_stream && pkt_in_play_range
+			&& !(is->video_st->disposition & AV_DISPOSITION_ATTACHED_PIC)) {
+			packet_queue_put(&is->videoq, pkt);
+		}
+		else if (pkt->stream_index == is->subtitle_stream && pkt_in_play_range) {
+			packet_queue_put(&is->subtitleq, pkt);
+		}
+		else {
+			av_packet_unref(pkt);
+		}
+	}
+
+	ret = 0;
+fail2:
+	myMediaFileClose(&myMediaoFile);
+
+	return 0;
 }
 
 static VideoState *stream_open(const char *filename, AVInputFormat *iformat)

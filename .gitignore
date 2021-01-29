@@ -1716,3 +1716,14 @@ SDL2-2.0.14/build/ZERO_CHECK.vcxproj.filters
 lib/x86/QYFC.exp
 lib/x86/QYFC.lib
 ffplay/x64/Release/ffd3d11.obj
+MyMediaFile/x64/Debug/MyMediaFile.log
+MyMediaFile/x64/Debug/MyMediaFile.obj
+MyMediaFile/x64/Debug/MyMediaFile.tlog/cl.command.1.tlog
+MyMediaFile/x64/Debug/MyMediaFile.tlog/CL.read.1.tlog
+MyMediaFile/x64/Debug/MyMediaFile.tlog/CL.write.1.tlog
+MyMediaFile/x64/Debug/MyMediaFile.tlog/Lib-link.read.1.tlog
+MyMediaFile/x64/Debug/MyMediaFile.tlog/Lib-link.write.1.tlog
+MyMediaFile/x64/Debug/MyMediaFile.tlog/lib.command.1.tlog
+MyMediaFile/x64/Debug/MyMediaFile.tlog/MyMediaFile.lastbuildstate
+MyMediaFile/x64/Debug/vc120.idb
+MyMediaFile/x64/Debug/vc120.pdb
