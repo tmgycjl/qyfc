@@ -52,6 +52,12 @@ BOOL SettingDlg::OnInitDialog()
 		render->SetCurSel(iniFile.Get_int(L"setting", L"render",0));
 	}
 
+	QYSwitchButton *sdl = (QYSwitchButton*)getObjectPart("enable_sdl");
+	if (nullptr != sdl)
+	{
+		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
+		sdl->SetCheck(iniFile.Get_int(L"setting", L"sdl", 0));
+	}
 
 	QYButton *ok = (QYButton*)getObjectPart("ok");
 	if (nullptr != ok)
@@ -90,8 +96,20 @@ void SettingDlg::onEvent(QYPropertyList *propertyList)
 		{
 			QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 			iniFile.Write_int(L"setting",L"render",render->GetCurSel());
+
+			
 			EndDialog(IDCANCEL);
 		}
 		 
+
+		QYSwitchButton *sdl = (QYSwitchButton*)getObjectPart("enable_sdl");
+		if (nullptr != sdl)
+		{
+			QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
+			iniFile.Write_int(L"setting", L"sdl", sdl->GetCheck());
+
+
+			EndDialog(IDCANCEL);
+		}
 	}
 }

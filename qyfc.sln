@@ -271,6 +271,7 @@ Global
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Debug|Win32.Build.0 = Debug|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Debug|x64.ActiveCfg = Debug|x64
+		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Debug|x64.Build.0 = Debug|x64
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.MinSizeRel|Mixed Platforms.ActiveCfg = Release|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.MinSizeRel|Mixed Platforms.Build.0 = Release|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.MinSizeRel|Win32.ActiveCfg = Release|Win32
@@ -285,7 +286,7 @@ Global
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Release|Win32.ActiveCfg = Release|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Release|Win32.Build.0 = Release|Win32
-		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Release|x64.ActiveCfg = Release|Win32
+		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.Release|x64.ActiveCfg = Release|x64
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.RelWithDebInfo|Mixed Platforms.ActiveCfg = Release|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.RelWithDebInfo|Mixed Platforms.Build.0 = Release|Win32
 		{2060C3A6-172A-4E47-95B7-3BC622EF1409}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32

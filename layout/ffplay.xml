@@ -20,6 +20,10 @@
 </group> 
 <group id="setting" text="SOFT_CONFIG" size="600,400">
     <widgetlist  id="edit_list" rel1="0.0,0" rel2="1.0,1.0" offset1="0,0" offset2="0,-48">
+	 <widget size="0,24">
+        <static  id="use_sdl" text="USE_SDL" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
+         <switch  id="enable_sdl"  rel1="0.9,0" rel2="0.9,1"  offset1="-32,0" />
+      </widget>
       <widget size="0,24">
         <static  id="render_text" text="RENDER_MODE" rel1="0.0,0" rel2="0.5,1.0" offset1="20,0" offset2="0,0" />
         <combobox id="render_combobox" rel1="0.5,0" rel2="1.0,1.0" offset1="0,0" offset2="-20,0">

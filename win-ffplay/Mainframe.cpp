@@ -95,6 +95,9 @@ bool CMainframe::playUrl(std::string &url)
 		_videoWnd->Show(nCmdShow);
 		QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 
+		ffplayUseSDLRender(iniFile.Get_int(L"setting", L"sdl", 1));
+
+
 		//StartFFPLAY(std::string("c:\\ffmpeg_installed\\bin\\ffplay.exe"), std::string(cmdBuf));
 		if (0 == ffplayPlay(_playWnd, "%s %s,%s %s,%s %s,%s %s,%s %s",
 			QYApp::getAppPath().c_str(),
@@ -148,6 +151,8 @@ bool CMainframe::playFile(std::string &filePath)
 		if (style & WS_EX_NOACTIVATE) {
 			nCmdShow = SW_SHOWNOACTIVATE;
 		}
+
+		ffplayUseSDLRender(iniFile.Get_int(L"setting", L"sdl", 1));
 
 		_videoWnd->Show(nCmdShow);
 		if (0 == ffplayPlay(_playWnd, "%s %s,%s %s,%s %s,%s %s,%s %s",
@@ -249,7 +254,9 @@ BOOL CMainframe::OnInitDialog()
 
 	//Zoom();
 
-	
+
+	//playFile(std::string("c:/out.pch"));
+
 	return TRUE;
 }
 
@@ -497,26 +504,35 @@ void CMainframe::updateVideoSize()
 	{
 		QYRect rcWiget;
 		_videoWidget->GetClientRect(rcWiget);
-#if 0
+#if 1
 
 
 		QYRect rcDisplay = rcWiget;
 		float ratioImage = (float)_videoSize.cx / (float)_videoSize.cy;
 		float ratioWnd = (float)rcWiget.Width() / (float)rcWiget.Height();
 		int off = 0;
+		float realXY = 0;
 		if (ratioImage > ratioWnd)
 		{
-			off = (rcWiget.Height() - (rcWiget.Width() / ratioImage)) / 2;
+			float realXY = rcWiget.Width() / ratioImage;
+
+			off = (rcWiget.Height() - realXY) / 2;
 			rcDisplay.top += off;
-			rcDisplay.bottom -= off;
+			rcDisplay.bottom = rcDisplay.top + realXY;
 		}
 		else
 		{
-			off = (rcWiget.Width() - rcWiget.Height() * ratioImage) / 2;
+			realXY = rcWiget.Height() * ratioImage;
+
+			off = (rcWiget.Width() - realXY) / 2;
 			rcDisplay.left += off;
-			rcDisplay.right -= off;
+			rcDisplay.right = rcDisplay.left +  realXY ;
 		}
-#endif
+
+		_videoWnd->MoveWindow(rcDisplay);
+#else
+
+
  		if (nullptr != _videoWnd)
  		{
  			_videoWnd->MoveWindow(rcWiget);
@@ -535,21 +551,18 @@ void CMainframe::updateVideoSize()
 			
 
  		}
+
+#endif
 	}
 }
 
 BOOL CMainframe::OnSize(UINT nType, int cx, int cy)
 {
 	QYDialog::OnSize(nType, cx, cy);
-#if 1
 
 
+		updateVideoSize();
 	
-#endif
-
-	updateVideoSize();
-
-
 
 	return TRUE;
 }

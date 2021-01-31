@@ -50,3 +50,7 @@
 
 	FFPLAY_DLLAPI void ffplayVideoResize(RECT *rect);
 
+	FFPLAY_DLLAPI void ffplayUseSDLRender(int use);
+
+	FFPLAY_DLLAPI int ffplayIsSDLRender();
+

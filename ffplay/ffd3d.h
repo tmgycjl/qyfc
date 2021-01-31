@@ -16,7 +16,9 @@ typedef struct
 	LPD3DXFONT m_p2Dfont;
 	int _imageWidth;
 	int _imageHeight;
-	BOOL _initD3D;
+	int _initD3D;
+	RECT lastRcDisplay;
+	RECT lastRealRcDisplay;
 }FFD3D;
 
 

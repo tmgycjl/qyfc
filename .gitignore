@@ -1727,3 +1727,15 @@ MyMediaFile/x64/Debug/MyMediaFile.tlog/lib.command.1.tlog
 MyMediaFile/x64/Debug/MyMediaFile.tlog/MyMediaFile.lastbuildstate
 MyMediaFile/x64/Debug/vc120.idb
 MyMediaFile/x64/Debug/vc120.pdb
+MyMediaFile.zip
+SDL2-2.0.14/VisualC-WinRT/SDL2-WinRT.targets
+SDL2-2.0.14/test/nacl/common.js
+SDL2-2.0.14/test/nacl/background.js
+SDL2-2.0.14/test/emscripten/joystick-pre.js
+SDL2-2.0.14/VisualC-WinRT/SDL2main-WinRT-NonXAML.targets
+SDL2-2.0.14/src/render/direct3d/SDL_render_d3d.c
+SDL2-2.0.14/build-scripts/winrtbuild.bat
+SDL2-2.0.14/build-scripts/windows-buildbot-zipper.bat
+SDL2-2.0.14/android-project/gradlew.bat
+SDL2-2.0.14/android-project/gradle/wrapper/gradle-wrapper.properties
+SDL2-2.0.14/android-project/gradle.properties

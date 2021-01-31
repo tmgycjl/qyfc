@@ -99,7 +99,7 @@ BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecre
 	ddraw->m_rcBkBuffer.bottom = ddraw->lastRcDisplay.bottom - ddraw->lastRcDisplay.top;
 
 	
-	calculateDisplayRect(&ddraw->lastRealRcDisplay, width, height);
+	//calculateDisplayRect(&ddraw->lastRealRcDisplay, width, height);
 
 
 	ddraw->m_rcBackBuffer.left = ddraw->m_rcBackBuffer.top = 0;
@@ -355,9 +355,8 @@ BOOL updateScreen(FFDDraw *ddraw)
 		return FALSE;
 	}
 
-	
 
-	calculateDisplayRect(&ddraw->lastRealRcDisplay, ddraw->m_nImageWidth, ddraw->m_nImageHeight);
+	//calculateDisplayRect(&ddraw->lastRealRcDisplay, ddraw->m_nImageWidth, ddraw->m_nImageHeight);
 
 
 	hr = ddraw->m_pddsBackBuffer->Blt(&ddraw->m_rcBackBuffer, ddraw->m_pddsDispBuffer, &ddraw->m_rcDispBuffer, DDBLT_WAIT, NULL);
@@ -377,9 +376,9 @@ BOOL updateScreen(FFDDraw *ddraw)
 	ZeroMemory(&bltfx, sizeof(DDBLTFX));
 	bltfx.dwSize = sizeof(DDBLTFX);
 	bltfx.dwFillColor = RGB(0, 0, 0);
-	hr = ddraw->m_pddsBKBuffer->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &bltfx);
+	//hr = ddraw->m_pddsBKBuffer->Blt(NULL, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &bltfx);
 	
-	hr = ddraw->m_pddsFrontBuffer->Blt(&ddraw->lastRcDisplay, ddraw->m_pddsBKBuffer, &ddraw->m_rcBkBuffer, DDBLT_WAIT, NULL);
+	//hr = ddraw->m_pddsFrontBuffer->Blt(&ddraw->lastRcDisplay, ddraw->m_pddsBKBuffer, &ddraw->m_rcBkBuffer, DDBLT_WAIT, NULL);
 
 	hr = ddraw->m_pddsFrontBuffer->Blt(&ddraw->lastRealRcDisplay, ddraw->m_pddsBackBuffer, &ddraw->m_rcBackBuffer, DDBLT_WAIT, NULL);
 

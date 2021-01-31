@@ -1631,6 +1631,9 @@ D3D_Reset(SDL_Renderer * renderer)
         data->vertexBufferSize[i] = 0;
     }
 
+#if 1
+
+
     result = IDirect3DDevice9_Reset(data->device, &data->pparams);
     if (FAILED(result)) {
         if (result == D3DERR_DEVICELOST) {
@@ -1640,7 +1643,7 @@ D3D_Reset(SDL_Renderer * renderer)
             return D3D_SetError("Reset()", result);
         }
     }
-
+#endif
     /* Allocate application render targets */
     for (texture = renderer->textures; texture; texture = texture->next) {
         if (texture->access == SDL_TEXTUREACCESS_TARGET) {
