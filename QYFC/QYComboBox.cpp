@@ -545,7 +545,7 @@ LRESULT QYComboBox::OnPaint()
 	COLORREF oldColor = dc.SetTextColor(QY_THEME.TEXT_COLOR_NORMAL);
 
 	hOldFont = (HFONT)dc.SelectObject(m_pFont);
-	rect.left += 2;
+	rect.left += 5;
 
 	dc.DrawText(&m_strText, m_strText.Length(), &rect, DT_LEFT | DT_SINGLELINE | DT_VCENTER);
 
