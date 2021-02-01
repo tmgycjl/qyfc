@@ -109,7 +109,12 @@ EXIT_MAIN:
 		return TRUE;
 	}
 
-## Check out "qyfc-demo/qyfc-demo-dlg.cpp"  to learn more.
+
+# win-ffplay
+
+	This is a media player, GUI for QYFC and media engine for ffmpeg.We also can play  private media file for myself for a small change.For  example "readMyMediaFile".
+
+ 
 	
 # Author
 
