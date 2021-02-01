@@ -1754,7 +1754,6 @@ x64/Release/msvcr120.dll
 x64/Release/msvcp120.dll
 ffplay/x64/Debug/ffplay.tlog/unsuccessfulbuild
 ipch/win-ffplay-53b8f4f9/win-ffplay-5851e441.ipch
-MyMediaFile/MyMediaFile.h
 x64/Release/config.ini
 MyMediaFile/MyMediaFile.cpp
 MyMediaFile/MyMediaFile.vcxproj.filters
