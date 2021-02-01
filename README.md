@@ -112,7 +112,9 @@ EXIT_MAIN:
 
 # win-ffplay
 
-	This is a media player, GUI for QYFC and media engine for ffmpeg.We also can play  private media file for myself for a small change.
+	This is a media player, GUI for QYFC and media engine for ffmpeg.
+	
+	We also can play  private media file for myself for a small change.
 	
 	For  example "readMyMediaFile".
 
