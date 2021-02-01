@@ -2,7 +2,7 @@
 <UI>
   <group id="ffplay" text="WIN_FFPLAY" size="800,600">
     <widget  id="video_widget" color="0,0,0"  rel1="0.0,0.0" rel2="1.0,1.0" offset1="1,0" offset2="-1,-48"/>
-	<process id="play_process" color="0,0,0,255,255,0" rel1="0.0,1.0" rel2="1.0,1.0" offset1="1,-48" offset2="-1,-42" />
+	<process id="play_process" color="71,71,71,255,255,0" rel1="0.0,1.0" rel2="1.0,1.0" offset1="1,-48" offset2="-1,-42" />
 	<button  id="play" image="replay_play.png" rel1="0,1" rel2="0,1" offset1="6,-38" offset2="38,-6"/>
 	<button  id="stop" image="replay_stop.png" leftto="play RIGHT" topto="play TOP" bottomto="play BOTTOM" offset1="6,0" offset2="38,0"/>
 	<static  id="play_time" text="00:00:00/00:00:00"  rel1="1.0,1.0" rel2="1.0,1.0" offset1="-120,-38" offset2="-6,-6"/>

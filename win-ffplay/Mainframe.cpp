@@ -166,8 +166,11 @@ bool CMainframe::playFile(std::string &filePath)
 		{
 			_lastOpenUrl = false;
 			_lastFilePath = filePath;
-			SetTimer(1, 500, nullptr);
 
+			_playProcess->Show();
+
+			SetTimer(1, 500, nullptr);
+			
 			return true;
 		}
 
@@ -221,6 +224,7 @@ BOOL CMainframe::OnInitDialog()
 	{
 		_playProcess->registerCallback(QY_CALLBACK_EVENT, &m_eventCB);
 		_playProcess->setReadonly(false);
+		_playProcess->Show(SW_HIDE);
 	}
 
 	_timeText = (QYStatic*)getObjectPart("play_time");
@@ -389,6 +393,7 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 		_timeText->setWindowText("00:00:00/00:00:00");
 		_playProcess->SetRange(0);
 		_playProcess->SetPos(0);
+		_playProcess->Show(SW_HIDE);
 	}
 	else if ("setting" == id)
 	{
@@ -504,55 +509,40 @@ void CMainframe::updateVideoSize()
 	{
 		QYRect rcWiget;
 		_videoWidget->GetClientRect(rcWiget);
-#if 1
 
 
-		QYRect rcDisplay = rcWiget;
-		float ratioImage = (float)_videoSize.cx / (float)_videoSize.cy;
-		float ratioWnd = (float)rcWiget.Width() / (float)rcWiget.Height();
-		int off = 0;
-		float realXY = 0;
-		if (ratioImage > ratioWnd)
-		{
-			float realXY = rcWiget.Width() / ratioImage;
+			QYRect rcDisplay = rcWiget;
+			float ratioImage = (float)_videoSize.cx / (float)_videoSize.cy;
+			float ratioWnd = (float)rcWiget.Width() / (float)rcWiget.Height();
+			int off = 0;
+			float realXY = 0;
+			if (ratioImage > ratioWnd)
+			{
+				float realXY = rcWiget.Width() / ratioImage;
 
-			off = (rcWiget.Height() - realXY) / 2;
-			rcDisplay.top += off;
-			rcDisplay.bottom = rcDisplay.top + realXY;
-		}
-		else
-		{
-			realXY = rcWiget.Height() * ratioImage;
+				off = (rcWiget.Height() - realXY) / 2;
+				rcDisplay.top += off;
+				rcDisplay.bottom = rcDisplay.top + realXY;
+			}
+			else
+			{
+				realXY = rcWiget.Height() * ratioImage;
 
-			off = (rcWiget.Width() - realXY) / 2;
-			rcDisplay.left += off;
-			rcDisplay.right = rcDisplay.left +  realXY ;
-		}
-
-		_videoWnd->MoveWindow(rcDisplay);
-#else
+				off = (rcWiget.Width() - realXY) / 2;
+				rcDisplay.left += off;
+				rcDisplay.right = rcDisplay.left + realXY;
+			}
 
 
- 		if (nullptr != _videoWnd)
- 		{
- 			_videoWnd->MoveWindow(rcWiget);
+			_videoWnd->MoveWindow(rcDisplay);
 
+			RECT rc;
+			rc.left = rcDisplay.left;
+			rc.right = rcDisplay.right;
+			rc.top = rcDisplay.top;
+			rc.bottom = rcDisplay.bottom;
 
-				QYRect rcVideoWnd;
-				_videoWnd->GetClientRect(rcVideoWnd);
-
-				RECT rc;
-				rc.left = rcVideoWnd.left;
-				rc.right = rcVideoWnd.right;
-				rc.top = rcVideoWnd.top;
-				rc.bottom = rcVideoWnd.bottom;
-
-				ffplayVideoResize(&rc);
-			
-
- 		}
-
-#endif
+			ffplayVideoResize(&rc);
 	}
 }
 

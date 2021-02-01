@@ -231,6 +231,8 @@ BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecre
 		return TRUE;
 
 	
+	//	RGB surface ,Image edge has jagged, unknown reason, use D3D for RGB
+
 
 #if 0
 	ddsd.dwFlags        = DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;     
@@ -270,7 +272,7 @@ BOOL ddrawReCreate(FFDDraw *ddraw, HWND hWnd, int width, int height, BOOL bRecre
 	}
 
 #endif
-//	RGB表面
+
 	
 	// 试YUV表面		
 	ZeroMemory(&ddpf, sizeof(DDPIXELFORMAT));

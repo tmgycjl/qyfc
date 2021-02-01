@@ -28,7 +28,7 @@ int d3d11Create(FFD3D11 *d3d, HWND hWnd, int width, int height)
 	d3d->_imageHeight  = height;
 
 	RECT rect;
-	GetWindowRect(d3d->m_hWnd, &rect);
+	GetClientRect(d3d->m_hWnd, &rect);
 
 	
 	d3d->rcDisplay.left = d3d->rcDisplay.top = 0;
@@ -137,7 +137,6 @@ int d3d11Create(FFD3D11 *d3d, HWND hWnd, int width, int height)
 		return E_FAIL;
 	}
 
-
 	d3d->pImmediateContext->OMSetRenderTargets(1, &d3d->pRenderTargetView, d3d->m_pDepthStencilView);
 
 	D3D11_VIEWPORT vp;
@@ -230,7 +229,7 @@ void d3d11Render(FFD3D11 *d3d, int width, int height, HWND hWnd)
 
 
 	RECT rcDisplay;
-	GetWindowRect(d3d->m_hWnd, &rcDisplay);
+	GetClientRect(d3d->m_hWnd, &rcDisplay);
 
 
 	if (d3d->rcDisplay.right - d3d->rcDisplay.left != rcDisplay.right - rcDisplay.left
@@ -239,6 +238,11 @@ void d3d11Render(FFD3D11 *d3d, int width, int height, HWND hWnd)
 		//d3d->pSwapChain->ResizeBuffers(0, d3d->rcDisplay.right - d3d->rcDisplay.left, d3d->rcDisplay.bottom - d3d->rcDisplay.top, DXGI_FORMAT_UNKNOWN, 0);
 
 		d3d->_initD3D = FALSE;
+		d3d->_initD3D = d3d11Create(d3d, hWnd, width, height);
+		if (!d3d->_initD3D)
+		{
+			return;
+		}
 		return ;
 	}
 

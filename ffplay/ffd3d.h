@@ -10,15 +10,16 @@ typedef struct
 	LPDIRECT3DVERTEXBUFFER9 m_pVBvideo;		
 	LPDIRECT3DTEXTURE9      m_pTexturesbmp;
 	LPDIRECT3DVERTEXBUFFER9 m_pVBbmp;     
-
+	IDirect3DSurface9 * m_pd3dSurface;//D3DªÊÕº”√±‰¡ø
 	HWND m_hWnd;
 	D3DFORMAT m_Format;
 	LPD3DXFONT m_p2Dfont;
 	int _imageWidth;
 	int _imageHeight;
 	int _initD3D;
-	RECT lastRcDisplay;
-	RECT lastRealRcDisplay;
+	//RECT lastRcDisplay;
+	//RECT lastRealRcDisplay;
+	RECT m_rtViewport;
 }FFD3D;
 
 
@@ -26,7 +27,7 @@ typedef struct
 #ifdef __cplusplus
 extern "C"{
 #endif
-	int d3dCreate(FFD3D *d3d, HWND hWnd, int width, int height);
+	int d3dReCreate(FFD3D *d3d, HWND hWnd, int width, int height);
 
 	int d3dLockSurface(FFD3D *d3d, void **data, int *pitch);
 

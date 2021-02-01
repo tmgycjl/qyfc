@@ -1007,7 +1007,7 @@ static int upload_texture(SDL_Texture **tex, AVFrame *frame, struct SwsContext *
             /* This should only happen if we are not using avfilter... */
             *img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
                 frame->width, frame->height, frame->format, frame->width, frame->height,
-                AV_PIX_FMT_ARGB, sws_flags, NULL, NULL, NULL);
+                AV_PIX_FMT_BGRA, sws_flags, NULL, NULL, NULL);
             if (*img_convert_ctx != NULL) {
                 uint8_t *pixels[4];
                 int pitch[4];
@@ -1149,7 +1149,7 @@ static int upload_d3d_data(FFD3D *d3d, AVFrame *frame, struct SwsContext **img_c
 
 	switch (d3d->m_Format)
 	{
-	case D3DFMT_A8R8G8B8:
+	case D3DFMT_X8R8G8B8:
 	{
 		Uint32 sdl_pix_fmt;
 		*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,
@@ -1355,7 +1355,7 @@ static void video_image_display(VideoState *is)
 	{
 		if (RENDER_TYPE_D3D == _renderType)
 		{
-			d3dCreate(_d3d, _window, vp->frame->width, vp->frame->height, TRUE);
+			d3dReCreate(_d3d, _window, vp->frame->width, vp->frame->height, TRUE);
 		}
 		else if (RENDER_TYPE_D3D11 == _renderType)
 		{
@@ -1716,10 +1716,21 @@ static void do_exit(VideoState *is)
     if (is) {
         stream_close(is);
     }
-    if (renderer)
-        SDL_DestroyRenderer(renderer);
-    if (window)
-        SDL_DestroyWindow(window);
+	if (renderer)
+	{
+		SDL_DestroyRenderer(renderer);
+		renderer = NULL;
+	}
+
+#if 0
+
+
+	if(window)
+	{
+		SDL_DestroyWindow(window);
+	}
+
+#endif
     uninit_opts();
 #if CONFIG_AVFILTER
     av_freep(&vfilters_list);
@@ -4502,6 +4513,13 @@ static UINT  thread_play(LPVOID lpvoid)
 	}
 
 
+	if (NULL != _d3d11)
+	{
+		d3d11Release(_d3d11);
+		free(_d3d11);
+		_d3d11 = NULL;
+	}
+
 	_playing = 0;
 
 	return 0;
@@ -4807,7 +4825,7 @@ void ffplayVideoResize(RECT *rect)
 	{
 		return;
 	}
-#if 0
+#if 1
 
 	int x, y;
 	int w, h;
