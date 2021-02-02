@@ -4853,3 +4853,170 @@ void ffplayVideoResize(RECT *rect)
 
 	InvalidateRect(_window, NULL, FALSE);
 }
+
+
+int ffplayWriteMyMediaFile(const char *filePath)
+{
+	MyMediaFile myMediaoFile;
+
+	memset(&myMediaoFile, 0, sizeof(MyMediaFile));
+	VideoState *is = (VideoState *)malloc(sizeof(VideoState));
+	memset(is, 0, sizeof(VideoState));
+
+
+	int flags;
+
+	init_dynload();
+
+	av_log_set_flags(AV_LOG_SKIP_REPEATED);
+
+	input_filename = NULL;
+
+
+	AVFormatContext *ic = NULL;
+	int err, i, ret;
+	int st_index[AVMEDIA_TYPE_NB];
+	AVPacket pkt1, *pkt = &pkt1;
+	int64_t stream_start_time;
+	int pkt_in_play_range = 0;
+	AVDictionaryEntry *t;
+	SDL_mutex *wait_mutex = SDL_CreateMutex();
+	int scan_all_pmts_set = 0;
+	int64_t pkt_ts;
+
+	if (!wait_mutex) {
+		av_log(NULL, AV_LOG_FATAL, "SDL_CreateMutex(): %s\n", SDL_GetError());
+		ret = AVERROR(ENOMEM);
+		goto fail;
+	}
+
+	memset(st_index, -1, sizeof(st_index));
+// 	is->last_video_stream = is->video_stream = -1;
+// 	is->last_audio_stream = is->audio_stream = -1;
+// 	is->last_subtitle_stream = is->subtitle_stream = -1;
+// 	is->eof = 0;
+
+	ic = avformat_alloc_context();
+	if (!ic) {
+		av_log(NULL, AV_LOG_FATAL, "Could not allocate context.\n");
+		ret = AVERROR(ENOMEM);
+		goto fail;
+	}
+	//ic->interrupt_callback.callback = decode_interrupt_cb;
+	//ic->interrupt_callback.opaque = is;
+	if (!av_dict_get(format_opts, "scan_all_pmts", NULL, AV_DICT_MATCH_CASE)) {
+		av_dict_set(&format_opts, "scan_all_pmts", "1", AV_DICT_DONT_OVERWRITE);
+		scan_all_pmts_set = 1;
+	}
+	err = avformat_open_input(&ic, filePath, is->iformat, &format_opts);
+	if (err < 0)
+	{
+		print_error(is->filename, err);
+		ret = -1;
+		goto fail;
+	}
+	if (scan_all_pmts_set)
+		av_dict_set(&format_opts, "scan_all_pmts", NULL, AV_DICT_MATCH_CASE);
+
+	if ((t = av_dict_get(format_opts, "", NULL, AV_DICT_IGNORE_SUFFIX))) {
+		av_log(NULL, AV_LOG_ERROR, "Option %s not found.\n", t->key);
+		ret = AVERROR_OPTION_NOT_FOUND;
+		goto fail;
+	}
+	is->ic = ic;
+
+	if (genpts)
+		ic->flags |= AVFMT_FLAG_GENPTS;
+
+	av_format_inject_global_side_data(ic);
+
+	if (find_stream_info) {
+		AVDictionary **opts = setup_find_stream_info_opts(ic, codec_opts);
+		int orig_nb_streams = ic->nb_streams;
+
+		err = avformat_find_stream_info(ic, opts);
+
+		for (i = 0; i < orig_nb_streams; i++)
+			av_dict_free(&opts[i]);
+		av_freep(&opts);
+
+		if (err < 0) {
+			av_log(NULL, AV_LOG_WARNING,
+				"%s: could not find codec parameters\n", is->filename);
+			ret = -1;
+			goto fail;
+		}
+	}
+
+	if (ic->pb)
+		ic->pb->eof_reached = 0; // FIXME hack, ffplay maybe should not use avio_feof() to test for the end
+
+	if (seek_by_bytes < 0)
+		seek_by_bytes = !!(ic->iformat->flags & AVFMT_TS_DISCONT) && strcmp("ogg", ic->iformat->name);
+
+	if (show_status)
+		av_dump_format(ic, 0, filePath, 0);
+
+	if (!video_disable)
+		st_index[AVMEDIA_TYPE_VIDEO] =
+		av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO,
+		st_index[AVMEDIA_TYPE_VIDEO], -1, NULL, 0);
+	if (!audio_disable)
+		st_index[AVMEDIA_TYPE_AUDIO] =
+		av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO,
+		st_index[AVMEDIA_TYPE_AUDIO],
+		st_index[AVMEDIA_TYPE_VIDEO],
+		NULL, 0);
+	if (!video_disable && !subtitle_disable)
+		st_index[AVMEDIA_TYPE_SUBTITLE] =
+		av_find_best_stream(ic, AVMEDIA_TYPE_SUBTITLE,
+		st_index[AVMEDIA_TYPE_SUBTITLE],
+		(st_index[AVMEDIA_TYPE_AUDIO] >= 0 ?
+		st_index[AVMEDIA_TYPE_AUDIO] :
+		st_index[AVMEDIA_TYPE_VIDEO]),
+		NULL, 0);
+
+	is->show_mode = show_mode;
+	if (st_index[AVMEDIA_TYPE_VIDEO] >= 0) {
+		AVStream *st = ic->streams[st_index[AVMEDIA_TYPE_VIDEO]];
+		AVCodecParameters *codecpar = st->codecpar;
+		AVRational sar = av_guess_sample_aspect_ratio(ic, st, NULL);
+		if (codecpar->width)
+			set_default_window_size(codecpar->width, codecpar->height, sar);
+	}
+
+	AVStream *p = ic->streams[1];
+
+	AVPacket *packet = av_packet_alloc();
+	for (;;) 
+	{
+		
+		ret = av_read_frame(ic, packet);
+		if (ret < 0) {
+			if ((ret == AVERROR_EOF || avio_feof(ic->pb)) && !is->eof) {
+				
+				is->eof = 1;
+			}
+			if (ic->pb && ic->pb->error)
+				break;
+			av_packet_unref(packet);
+
+			continue;
+		}
+		else {
+			is->eof = 0;
+			printf("frame type:%d,frame size:%d\n", packet->stream_index, packet->size);
+		}
+
+		av_packet_unref(packet);
+
+		Sleep(100);
+	}
+
+	ret = 0;
+fail:
+	if (ic && !is->ic)
+		avformat_close_input(&ic);
+
+	return 0;
+}

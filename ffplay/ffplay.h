@@ -54,3 +54,5 @@
 
 	FFPLAY_DLLAPI int ffplayIsSDLRender();
 
+	FFPLAY_DLLAPI int ffplayWriteMyMediaFile(const char *filePath);
+
