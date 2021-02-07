@@ -3256,7 +3256,7 @@ int readMyMediaFile(MyMediaFile *myMediaoFile,VideoState *is, AVFormatContext *i
 	memset(ic->streams[0], 0, sizeof(AVStream));
 	ic->streams[is->video_stream]->codecpar = (AVCodecParameters *)malloc(sizeof(AVCodecParameters));
 	memset(ic->streams[0]->codecpar, 0, sizeof(AVCodecParameters));
-	ic->streams[is->video_stream]->codecpar->codec_id = AV_CODEC_ID_H264;
+	ic->streams[is->video_stream]->codecpar->codec_id = myMediaoFile->vCodec;
 	ic->streams[is->video_stream]->codecpar->codec_type = AVMEDIA_TYPE_VIDEO;
 	ic->duration = myMediaoFile->duration*1000;
 	ic->start_time = myMediaoFile->startTime*1000;
@@ -3266,6 +3266,7 @@ int readMyMediaFile(MyMediaFile *myMediaoFile,VideoState *is, AVFormatContext *i
 	is->video_st->time_base.num = 1;
 	is->video_st->r_frame_rate.num = 23;
 	is->video_st->r_frame_rate.den = 1;
+	
 
 	is->ic = ic;
 
@@ -3285,9 +3286,9 @@ int readMyMediaFile(MyMediaFile *myMediaoFile,VideoState *is, AVFormatContext *i
 
 	ic->streams[is->audio_stream]->codecpar = (AVCodecParameters *)malloc(sizeof(AVCodecParameters));
 	memset(ic->streams[is->audio_stream]->codecpar, 0, sizeof(AVCodecParameters));
-	ic->streams[is->audio_stream]->codecpar->codec_id = AV_CODEC_ID_AAC;
+	ic->streams[is->audio_stream]->codecpar->codec_id = myMediaoFile->aCodec;
 	ic->streams[is->audio_stream]->codecpar->codec_type = AVMEDIA_TYPE_AUDIO;
-	ic->streams[is->audio_stream]->codecpar->sample_rate = 44100;
+	ic->streams[is->audio_stream]->codecpar->sample_rate = myMediaoFile->sampleRate;
 	ic->streams[is->audio_stream]->codecpar->channels = 2;
 	ic->streams[is->audio_stream]->codecpar->channel_layout = 3;
 	ic->streams[is->audio_stream]->codecpar->format = AV_SAMPLE_FMT_FLTP;
@@ -3322,6 +3323,9 @@ int readMyMediaFile(MyMediaFile *myMediaoFile,VideoState *is, AVFormatContext *i
 		goto fail2;
 	}
 
+	//is->viddec.avctx->extradata_size = myMediaoFile->extradata_size;
+	//is->viddec.avctx->extradata = (uint8_t *)malloc(myMediaoFile->extradata_size);
+	//memcpy(is->viddec.avctx->extradata, myMediaoFile->extradata, myMediaoFile->extradata_size);
 
 	if (stream_component_open(is, is->audio_stream))
 	{
@@ -3522,20 +3526,19 @@ static int read_thread(void *arg)
         scan_all_pmts_set = 1;
     }
     err = avformat_open_input(&ic, is->filename, is->iformat, &format_opts);
-    if (err < 0)
+    if (err < 0  || ic->streams[0]->duration < 0)
 	{
-#if 1
-
-		if (!myMediaFileOpen(&myMediaoFile,is->filename))
+		if (!myMediaFileOpen(&myMediaoFile,is->filename,0,NULL))
 		{
 			goto _try_read_my_media_file;
 		}
 
-#endif
         print_error(is->filename, err); 
         ret = -1;
         goto fail;
     }
+
+
     if (scan_all_pmts_set)
         av_dict_set(&format_opts, "scan_all_pmts", NULL, AV_DICT_MATCH_CASE);
 
@@ -4855,7 +4858,9 @@ void ffplayVideoResize(RECT *rect)
 }
 
 
-int ffplayWriteMyMediaFile(const char *filePath)
+
+
+int ffplayWriteMyMediaFile(const char *filePath, const  char *outPath)
 {
 	MyMediaFile myMediaoFile;
 
@@ -4915,6 +4920,9 @@ int ffplayWriteMyMediaFile(const char *filePath)
 		ret = -1;
 		goto fail;
 	}
+#if 0
+
+
 	if (scan_all_pmts_set)
 		av_dict_set(&format_opts, "scan_all_pmts", NULL, AV_DICT_MATCH_CASE);
 
@@ -4923,6 +4931,7 @@ int ffplayWriteMyMediaFile(const char *filePath)
 		ret = AVERROR_OPTION_NOT_FOUND;
 		goto fail;
 	}
+#endif
 	is->ic = ic;
 
 	if (genpts)
@@ -4948,11 +4957,10 @@ int ffplayWriteMyMediaFile(const char *filePath)
 		}
 	}
 
+	
+
 	if (ic->pb)
 		ic->pb->eof_reached = 0; // FIXME hack, ffplay maybe should not use avio_feof() to test for the end
-
-	if (seek_by_bytes < 0)
-		seek_by_bytes = !!(ic->iformat->flags & AVFMT_TS_DISCONT) && strcmp("ogg", ic->iformat->name);
 
 	if (show_status)
 		av_dump_format(ic, 0, filePath, 0);
@@ -4976,16 +4984,83 @@ int ffplayWriteMyMediaFile(const char *filePath)
 		st_index[AVMEDIA_TYPE_VIDEO]),
 		NULL, 0);
 
-	is->show_mode = show_mode;
-	if (st_index[AVMEDIA_TYPE_VIDEO] >= 0) {
-		AVStream *st = ic->streams[st_index[AVMEDIA_TYPE_VIDEO]];
-		AVCodecParameters *codecpar = st->codecpar;
-		AVRational sar = av_guess_sample_aspect_ratio(ic, st, NULL);
-		if (codecpar->width)
-			set_default_window_size(codecpar->width, codecpar->height, sar);
+	AVStream *vStream = NULL;
+	AVStream *aStream = NULL;
+
+	for (int i = 0; i < ic->nb_streams; i++)
+	{
+		if (ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO)
+		{
+			vStream = ic->streams[i];
+			myMediaoFile.vStreamIndex = i;
+		}
+		if (ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
+		{
+			aStream = ic->streams[i];
+			myMediaoFile.aStreamIndex = i;
+		}
 	}
 
-	AVStream *p = ic->streams[1];
+
+	myMediaoFile.vCodec = vStream->codec->codec_id;
+
+	
+	myMediaoFile.width = vStream->codec->width;
+	myMediaoFile.height = vStream->codec->height;
+
+
+
+	if (NULL != aStream)
+	{
+		myMediaoFile.aCodec = aStream->codec->codec_id;
+		myMediaoFile.sampleRate = aStream->codec->sample_rate;
+	}
+
+
+	printf("\n\n video codec :%d,audio codec :%d\n\n", myMediaoFile.vCodec, myMediaoFile.aCodec);
+
+
+
+	if (AV_CODEC_ID_H264 == myMediaoFile.vCodec)
+	{
+		myMediaoFile.extradata_size = vStream->codec->extradata_size;
+		memcpy(myMediaoFile.extradata, vStream->codec->extradata, myMediaoFile.extradata_size);
+
+		for (int i = 0; i < vStream->codec->extradata_size; i++)
+		{
+			printf("%x ", vStream->codec->extradata[i]);
+		}
+
+		printf("\n");
+
+		unsigned int offset = 6;
+		unsigned short temp = 0;
+		memcpy(&temp, vStream->codec->extradata + offset, sizeof(unsigned short));
+		myMediaoFile.spsLen = temp >> 8;
+		myMediaoFile.spsLen |= temp << 8;
+
+		memcpy(myMediaoFile.sps, vStream->codec->extradata + offset + 2, myMediaoFile.spsLen);
+
+		offset = 8 + myMediaoFile.spsLen + 1;
+		memcpy(&temp, vStream->codec->extradata + offset, sizeof(unsigned short));
+		myMediaoFile.ppsLen = temp >> 8;
+		myMediaoFile.ppsLen |= temp << 8;
+		memcpy(myMediaoFile.pps, vStream->codec->extradata + offset + 2, myMediaoFile.ppsLen);
+
+	}
+	else
+	{
+		goto fail;
+	}
+
+	
+
+
+		if (!myMediaFileOpen(&myMediaoFile, outPath, 1))
+		{
+			printf("myMediaFileOpen error!\n");
+			goto fail;
+		}
 
 	AVPacket *packet = av_packet_alloc();
 	for (;;) 
@@ -4997,26 +5072,38 @@ int ffplayWriteMyMediaFile(const char *filePath)
 				
 				is->eof = 1;
 			}
-			if (ic->pb && ic->pb->error)
-				break;
+
 			av_packet_unref(packet);
 
-			continue;
+			break;
 		}
 		else {
 			is->eof = 0;
-			printf("frame type:%d,frame size:%d\n", packet->stream_index, packet->size);
+			//printf("frame type:%d,frame size:%d\n", packet->stream_index, packet->size);
 		}
 
+		if (0 < packet->size)
+		{
+			packet->pts *= 1000 * (float)ic->streams[packet->stream_index]->time_base.num / (float)ic->streams[packet->stream_index]->time_base.den;
+			myMediaFileWriteFrame(&myMediaoFile, packet);
+
+		}
+	
 		av_packet_unref(packet);
 
-		Sleep(100);
+		
 	}
+	
+	myMediaFileClose(&myMediaoFile);
 
 	ret = 0;
-fail:
 	if (ic && !is->ic)
 		avformat_close_input(&ic);
 
 	return 0;
+fail:
+	if (ic && !is->ic)
+		avformat_close_input(&ic);
+
+	return -1;
 }
