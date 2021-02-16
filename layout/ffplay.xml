@@ -18,6 +18,11 @@
       </tree>
 	  <button  id="play"  text="PLAY" rel1="1.0,1.0" rel2="1.0,1.0"  offset1="-150,-50" offset2="-50,-20" />
 </group> 
+<group id="pic_dlg" text="OPEN_URL" size="800,500">
+	 <tree id="pic_tree" leftto="GROUP LEFT" topto="GROUP TOP"   bottomto="GROUP BOTTOM" offset1="4,4"  offset2="204,-4" drag="false" border="1" item_height="24">
+      </tree>
+	 
+</group> 
 <group id="setting" text="SOFT_CONFIG" size="600,400">
     <widgetlist  id="edit_list" rel1="0.0,0" rel2="1.0,1.0" offset1="0,0" offset2="0,-48">
 	 <widget size="0,24">

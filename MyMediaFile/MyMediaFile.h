@@ -53,7 +53,9 @@ int myMediaFileSeekFrame(MyMediaFile *myMediaFile, unsigned long pos);
 
 void myMediaFileClose(MyMediaFile *myMediaFile);
 
+int myMediaPicWrite(const char *inFile,const char *outFile);
 
+int myMediaPicRead(const char *inFile,char **streamBuffer);
 
 #ifdef __cplusplus
 }

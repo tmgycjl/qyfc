@@ -31,6 +31,7 @@ class QYUI_EXPORT_CLASS QYDialog : public QYWindow, public QYSizeBox, public QYS
 {
 public:
 	QYDialog();
+
 	virtual ~QYDialog();
 	
 	static UINT IDD;

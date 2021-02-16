@@ -199,7 +199,10 @@ BOOL QYPicture::load(const char *fileName)
 		m_pictureCallback(m_Data, fileName, &pStream, &len);
 		if (nullptr == pStream)
 		{
-			return FALSE;
+			TCHAR wszFileName[MAX_PATH] = { 0 };
+			QYString::SafeUTF82W(wszFileName, MAX_PATH, fileName);
+
+			return Load(wszFileName);
 		}
 		BOOL ret = Load(pStream, len);
 
@@ -431,11 +434,6 @@ void QYPicture::Draw(HDC hDc,
 	else if (IMAGE_STATUS_HOVER == m_Status)
 	{
 		pBitmap = m_pHoverImage;
-	}
-
-	if (NULL == pBitmap)
-	{
-		return;
 	}
 
 	if (NULL == pBitmap)

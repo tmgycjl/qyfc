@@ -178,6 +178,8 @@ public:
 		}
 	}
 
+	void calculateDisplayRect(int width, int height);
+
 	int left;
 	int top; 
 	int right;

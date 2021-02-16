@@ -10,8 +10,64 @@
 #pragma comment(lib,"ffplay")
 
 
+
+#define  WRITE_PICTURE    0
+
+#if  WRITE_PICTURE
+#include "../MyMediaFile/MyMediaFile.h"
+
+
+#if _DEBUG
+#pragma  comment(lib,"MyMediaFile-d")
+#else
+#pragma  comment(lib,"MyMediaFile")
+#endif
+
+#endif
+
 int _tmain(int argc, _TCHAR* argv[])
 {
+	
+#if WRITE_PICTURE
+	char szFileName[MAX_PATH] = { 0 };
+	char szFilePath[MAX_PATH] = { 0 };
+	WIN32_FIND_DATA findFileData;
+	char baseDir[] = "F:\\media\\person movie\\JPEG\\";
+	//char baseDir[] = "c:\\";
+	strcat_s(szFilePath, baseDir);
+	strcat_s(szFilePath, "*.jpg*");
+	HANDLE hFind = ::FindFirstFile(szFilePath, &findFileData);
+	if (INVALID_HANDLE_VALUE == hFind)
+	{
+		return 0;
+	}
+
+	int fileCount = 0;
+	do
+	{
+		if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			continue;
+		}
+
+		memset(szFileName, 0, sizeof(szFileName));
+		strncpy_s(szFileName, baseDir, strlen(baseDir));
+		strcat_s(szFileName, findFileData.cFileName);
+
+		unsigned int startTs = 0;
+
+		printf("open file :%s,fileCount:%d\n", szFileName, ++fileCount);
+
+
+		std::string outPath = "F:\\media\\person movie\\pchp\\";
+		outPath += findFileData.cFileName;
+		outPath += ".pchp";
+
+		myMediaPicWrite(szFileName, outPath.c_str());
+
+	} while (FindNextFile(hFind, &findFileData) );
+#else
+
 
 	ffplayStartUp(nullptr);
 
@@ -63,7 +119,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	} while (FindNextFile(hFind, &findFileData) && fileCount > 0);
 
-
+#endif
 	return 0;
 }
 

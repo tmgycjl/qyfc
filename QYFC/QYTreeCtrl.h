@@ -78,6 +78,7 @@ public:
 	DWORD InsertItem(DWORD parentItem, const TCHAR* strText, int image = -1, DWORD_PTR data = 0);
 	DWORD insertItem(DWORD parentItem, const char* text, int image = -1, DWORD_PTR data = 0);
 	LPCTSTR GetItemText(DWORD item);
+	std::string  getItemText(DWORD item);
 	BOOL SetItem(DWORD item, const TCHAR* strText, DWORD_PTR data = 0);
 	BOOL SetItemImage(DWORD item, int image);
 	QYTreeCtrlItem* FindItem(QYTreeCtrlItem *pParentItem,DWORD item);

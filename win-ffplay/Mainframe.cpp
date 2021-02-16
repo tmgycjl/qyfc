@@ -5,8 +5,10 @@
 #include <fstream>
 
 
+
 #include "SettingDlg.h"
 #include "UrlDlg.h"
+#include "PicDlg.h"
 
 
 CMainframe *CMainframe::m_instance = nullptr;;
@@ -333,12 +335,25 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 		UrlDlg dlg;
 		if (IDOK == dlg.DoModal(this))
 		{
-			if(playUrl(dlg._url))
+			if(!dlg._url.empty() && playUrl(dlg._url))
 			{
 				_play->setImage("replay_pause.png");
 			}
 			
 		}
+		
+	}
+	else if ("open_pic" == id)
+	{
+		std::string folderName;
+		if (QYFileStudio::browseForFolder(GetHwnd(), folderName, BIF_RETURNONLYFSDIRS | BIF_USENEWUI | BIF_UAHINT | BIF_NONEWFOLDERBUTTON))
+		{
+			QYPropertyList propertyList;
+			propertyList.addProperty("pic_dir", folderName);
+			PicDlg dlg(&propertyList);
+			dlg.DoModal(this);
+		}
+		
 		
 	}
 	else if ("play_process" == id)

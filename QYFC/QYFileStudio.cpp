@@ -1,6 +1,7 @@
 #include "QYFileStudio.h"
 #include <vector>
 
+
 QYFileStudio::QYFileStudio()
 {
 }
@@ -123,6 +124,13 @@ BOOL QYFileStudio::IsValidFilePath(LPCTSTR szPathName)
 	return TRUE;
 }
 
+BOOL QYFileStudio::FindFirst(std::string  &sFilePath)
+{
+	TCHAR szFilePath[MAX_PATH] = { 0 };
+	QYString::SafeA2W(szFilePath, MAX_PATH, sFilePath.c_str());
+	return FindFirst(szFilePath);
+}
+
 BOOL QYFileStudio::FindFirst(LPCTSTR szFilePath)
 {
 	m_hListFile = FindFirstFile(szFilePath, &m_FindFileData);
@@ -231,6 +239,27 @@ BOOL QYFileStudio::DeleteDirectory(LPCTSTR strDir)
 	return TRUE;
 }
 
+
+BOOL QYFileStudio::browseForFolder(HWND hWnd, std::string &folderName, unsigned int flags, const char *title /* = nullptr */)
+{
+	char szPathName[MAX_PATH] = { 0 };
+	BROWSEINFOA bInfo = { 0 };
+	bInfo.hwndOwner = hWnd;
+	bInfo.lpszTitle = title;
+	bInfo.ulFlags = flags; 
+		LPITEMIDLIST lpDlist;
+	lpDlist = SHBrowseForFolderA(&bInfo);
+	if (lpDlist != NULL)
+	{
+		SHGetPathFromIDListA(lpDlist, szPathName);
+
+		folderName = szPathName;
+		return TRUE;
+	}
+
+	return FALSE;
+
+}
 
 BOOL QYFileStudio::openFileDialog(HWND hWnd, std::string &filePath, const char *filter, const char *title)
 {

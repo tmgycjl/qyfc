@@ -10,9 +10,6 @@ public:
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
 	void onEvent(QYPropertyList *propertyList);
-
-	volatile bool _mainThreadRun = false;
-	HANDLE m_hListenerThread = nullptr;
 	std::string _url;
 private:
 	QYEdit *_editClientCount;

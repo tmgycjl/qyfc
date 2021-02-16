@@ -15,5 +15,6 @@
  <group  id="ffplay_oper">
     <item id="open_file" text="OPEN_FILE" />
 	<item id="open_url" text="OPEN_URL" />
+	<item id="open_pic" text="OPEN_PIC" />
   </group>
 </UI>

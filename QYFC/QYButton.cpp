@@ -151,52 +151,25 @@ BOOL QYButton::OnPaint()
 		int imageWidth = m_pImage->GetWidth();
 		int imageHeight = m_pImage->GetHeight();
 
-		if (RC.Width() >= imageWidth && RC.Height() >= imageHeight)
+		QYRect rcImage = RC;
+
+
+		rcImage.calculateDisplayRect(imageWidth, imageHeight);
+
+
+		if (m_bDown)
 		{
-			iconLeft = RC.left + (RC.Width() - imageWidth) / 2;
-			iconTop = RC.top + (RC.Height() - imageHeight) / 2;
-			 desWidth = (RC.Width() >= imageWidth) ? imageWidth : RC.Width() - 2;
-			 desHeight = (RC.Height() >= imageHeight) ? imageHeight : RC.Height() - 2;
+			m_pImage->SetPressed();
 		}
-		else if (RC.Width() <= imageWidth)
+		else
 		{
-			if ((float)RC.Width() / (float)RC.Height() > (float)imageWidth / (float)imageHeight)
-				{
-					iconTop = RC.top;
-					desHeight = RC.Height();
-					desWidth = RC.Height()*((float)imageWidth / (float)imageHeight);
-					iconLeft = RC.left + (RC.Width() - desWidth) / 2;
-				}
-				else
-				{
-					iconLeft = RC.left;
-					desWidth = RC.Width();
-					desHeight = RC.Width()*((float)imageHeight / (float)imageWidth);
-					iconTop = RC.top + (RC.Height() - desWidth) / 2;
-				}
-		}
-		else if (RC.Width() > imageWidth && RC.Height() < imageHeight)
-		{
-			iconTop = RC.top;
-			desHeight = RC.Height();
-			desWidth = RC.Width()*((float)RC.Height() / (float)imageHeight);
-			iconLeft = RC.left + (RC.Width() - desWidth) / 2;
-			
+			if (m_bHover)
+			{
+				m_pImage->SetHovered();
+			}
 		}
 
-			if (m_bDown)
-			{
-				m_pImage->SetPressed();
-			}
-			else
-			{
-				if (m_bHover)
-				{
-					m_pImage->SetHovered();
-				}
-			}
-	
-			m_pImage->Draw(dc.GetDC(), iconLeft, iconTop, desWidth, desHeight);
+		m_pImage->Draw(dc.GetDC(), rcImage);
 	}	
 	else
 	{

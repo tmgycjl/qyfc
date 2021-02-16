@@ -1807,3 +1807,4 @@ muxer/muxer.vcxproj
 muxer/muxer.cpp
 muxer/muxer.cpp
 muxer/muxer.vcxproj
+win-ffplay/x64/Debug/PicDlg.obj

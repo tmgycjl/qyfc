@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="Mainframe.h" />
+    <ClInclude Include="PicDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="stdafx.h" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Mainframe.cpp" />
+    <ClCompile Include="PicDlg.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

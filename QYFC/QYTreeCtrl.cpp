@@ -1039,6 +1039,23 @@ BOOL QYTreeCtrl::SetItem(DWORD item, const TCHAR* strText, DWORD_PTR data)
 	return TRUE;
 }
 
+
+std::string  QYTreeCtrl::getItemText(DWORD item)
+{
+	const TCHAR *text = GetItemText(item);
+	if (nullptr != text)
+	{
+		std::string sText;
+		char szText[1024] = { 0 };
+		QYString::SafeW2AUTF8(szText, 1024, text);
+		sText = szText;
+
+		return sText;
+	}
+
+	return "";
+}
+
 LPCTSTR QYTreeCtrl::GetItemText(DWORD item)
 {
 	QYTreeCtrlItem *pItem = FindItem(nullptr, item);
