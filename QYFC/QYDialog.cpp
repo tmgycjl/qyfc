@@ -370,6 +370,17 @@ LRESULT QYDialog::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	break;
     case WM_CLOSE:
 	{
+		struct w_funcCB_t *actionCB = getCallback(QY_CALLBACK_EVENT);
+		if (nullptr != actionCB)
+		{
+			QYPropertyList properties;
+			properties.addProperty("id", "close");
+			actionCB->callback(&properties);
+			if (properties.getValueWithDefaultBool("res",false))
+			{
+				return TRUE;
+			}
+		}
 #if 0
 		EndDialog(IDCANCEL);
 #else
