@@ -8,7 +8,8 @@ class QYUI_EXPORT_CLASS QYToolTip :
 public:
 	QYToolTip();
 	~QYToolTip();
-
+	static QYToolTip *_instance;
+	static QYToolTip* getInstance();
 	BOOL Create();
 	BOOL AddTool(QYWindow* window, LPCTSTR strText);
 	BOOL DeleteTool(QYWindow* window);

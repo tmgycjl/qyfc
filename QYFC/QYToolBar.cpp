@@ -19,7 +19,6 @@ QYToolBar::QYToolBar() :QYWindow()
 	m_nShowItemCount = 0;
 	m_morebtnSize = QYSize(24,24);
 	m_colorBk = QY_THEME.CLIENT_COLOR;
-	m_pToolTip = nullptr;
 	m_pPicMoreButton = nullptr;
 	m_pMoreDropList = nullptr;
 	m_itemSize = QYSize(20, 20);
@@ -54,7 +53,6 @@ LRESULT QYToolBar::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	case CB_SELECTSTRING: {::SendMessage(::GetParent(m_hWnd), QY_WM_TOOLBAR_ITEM_SELECTED, m_nShowItemCount + wParam, 0); }break;
 	case WM_NCDESTROY:
 	{
-		SAFE_DESTROY_WINDOW_PTR(m_pToolTip); 
 		SAFE_DESTROY_WINDOW_PTR(m_pMoreDropList); 
 		SAFE_DELETE(m_pPicMoreButton);
 		Clear(); 
@@ -91,11 +89,6 @@ BOOL QYToolBar::Create(DWORD dwExStyle,
 	m_pPicMoreButton = new QYPicture(IMAGE_STATUS_NORMAL|IMAGE_STATUS_HOVER);
 	m_pPicMoreButton->Load(IDP_MORE, QY_IMAGE_PNG);
 
-	if (!m_bHasString)
-	{
-		m_pToolTip = new QYToolTip;
-		m_pToolTip->Create();
-	}
 
 	return ret;
 }
@@ -809,7 +802,7 @@ LRESULT QYToolBar::OnLButtonUp(UINT nFlags, QYPoint point)
 		}
 		else
 		{
-			!m_bHasString ? m_pToolTip->Show(SW_HIDE) : 0;
+			!m_bHasString ? QYToolTip::getInstance()->Show(SW_HIDE) : 0;
 			QYPropertyList properties;
 			properties.addProperty("id", getID());
 			properties.addProperty("item", m_nSelItem);
@@ -911,18 +904,18 @@ LRESULT QYToolBar::OnMouseMove(UINT nFlags, QYPoint point)
 			auto it = m_listItem.begin();
 			advance(it, m_nHoverItem);
 
-			m_pToolTip->Show(SW_HIDE);
+			QYToolTip::getInstance()->Show(SW_HIDE);
 
 			if (-1 != (*it)->image[IMAGE_STATUS_NORMAL] && 0 < (*it)->strText.Length())
 			{
-				m_pToolTip->SetText((*it)->strText);
-				m_pToolTip->TrackPopup(this);
+				QYToolTip::getInstance()->SetText((*it)->strText);
+				QYToolTip::getInstance()->TrackPopup(this);
 			}
 			
 		}
 		else
 		{
-			!m_bHasString ? m_pToolTip->Show(SW_HIDE) : 0;
+			!m_bHasString ? QYToolTip::getInstance()->Show(SW_HIDE) : 0;
 		}
 		return TRUE;
 	}
@@ -931,7 +924,7 @@ LRESULT QYToolBar::OnMouseMove(UINT nFlags, QYPoint point)
 	{
 		m_nHoverItem = -1;
 		
-		!m_bHasString ? m_pToolTip->Show(SW_HIDE) : 0;
+		!m_bHasString ? QYToolTip::getInstance()->Show(SW_HIDE) : 0;
 	}
 
 	Invalidate();
@@ -951,7 +944,7 @@ LRESULT QYToolBar::OnMouseLeave(WPARAM, LPARAM)
 
 		if (!m_bHasString)
 		{
-			m_pToolTip->Show(SW_HIDE);
+			QYToolTip::getInstance()->Show(SW_HIDE);
 		}
 	}
 	return TRUE;
@@ -1030,8 +1023,6 @@ BOOL QYToolBar::setCheck(const char *itemKey, BOOL bCheck)
 	return bLastCheck;
 }
 
-
-
 BOOL QYToolBar::SetReadOnly(int item, BOOL bReadOnly)
 {
 	BOOL bLastReadOnly = FALSE;
@@ -1050,22 +1041,6 @@ BOOL QYToolBar::SetReadOnly(int item, BOOL bReadOnly)
 void QYToolBar::ShowText(BOOL bShowText)
 {
 	m_bHasString = bShowText; 
-	
-	if (!m_bHasString)
-	{
-		if (nullptr == m_pToolTip)
-		{
-			m_pToolTip = new QYToolTip;
-			if (!m_pToolTip->Create())
-			{
-				return;
-			}
-		}
-	}
-	else
-	{
-		SAFE_DESTROY_WINDOW_PTR(m_pToolTip);
-	}
 }
 
 void QYToolBar::SetItemImage(int item, int image)

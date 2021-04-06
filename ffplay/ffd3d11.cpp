@@ -231,6 +231,8 @@ void d3d11Render(FFD3D11 *d3d, int width, int height, HWND hWnd)
 	RECT rcDisplay;
 	GetClientRect(d3d->m_hWnd, &rcDisplay);
 
+#if 0
+
 
 	if (d3d->rcDisplay.right - d3d->rcDisplay.left != rcDisplay.right - rcDisplay.left
 		|| d3d->rcDisplay.bottom - d3d->rcDisplay.top != rcDisplay.bottom - rcDisplay.top)
@@ -245,7 +247,7 @@ void d3d11Render(FFD3D11 *d3d, int width, int height, HWND hWnd)
 		}
 		return ;
 	}
-
+#endif
 
 	float ClearColor[4] = { 0.5f, 0.1f, 0.2f, 1.0f }; 
 	d3d->pImmediateContext->ClearRenderTargetView(d3d->pRenderTargetView, ClearColor);

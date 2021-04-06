@@ -222,6 +222,8 @@ BOOL QYApp::ExitInstance()
 		GdiplusShutdown(m_gdiplusToken);
 	}
 
+	QYToolTip *p = QYToolTip::getInstance();
+	SAFE_DESTROY_WINDOW_PTR(p);
 
 	return TRUE;
 }

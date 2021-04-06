@@ -167,7 +167,7 @@ protected:
 	QYPicture *m_pPicMoreButton;
 	QYDropList *m_pMoreDropList;
 	std::vector<QYToolBarItem*> m_vectorHideItem;
-	QYToolTip   *m_pToolTip;
+	BOOL m_bUseToolTip;
 	int    m_padWidth;
 	int    m_padHeight;
 	int    m_spaceWidth;

@@ -17,8 +17,8 @@ typedef struct
 	int _imageWidth;
 	int _imageHeight;
 	int _initD3D;
-	//RECT lastRcDisplay;
-	//RECT lastRealRcDisplay;
+	RECT lastRcDisplay;
+	RECT lastRealRcDisplay;
 	RECT m_rtViewport;
 }FFD3D;
 

@@ -53,6 +53,7 @@
 # include "libavfilter/buffersrc.h"
 #endif
 
+
 #include <SDL.h>
 #include <SDL_thread.h>
 
@@ -1150,6 +1151,7 @@ static int upload_d3d_data(FFD3D *d3d, AVFrame *frame, struct SwsContext **img_c
 	switch (d3d->m_Format)
 	{
 	case D3DFMT_X8R8G8B8:
+	case D3DFMT_A8R8G8B8:
 	{
 		Uint32 sdl_pix_fmt;
 		*img_convert_ctx = sws_getCachedContext(*img_convert_ctx,

@@ -430,7 +430,7 @@ void CMainframe::OnTimer(UINT_PTR nIDEvent)
 		{
 			QYPropertyList properties;
 			properties.addProperty("id", "stop");
-			//onEvent(&properties);
+			onEvent(&properties);
 			return;
 		}
 

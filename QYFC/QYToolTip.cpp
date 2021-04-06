@@ -1,6 +1,19 @@
 #include "QYToolTip.h"
 #include "QYDC.h"
 #include "QYApp.h"
+ QYToolTip* QYToolTip::_instance = nullptr;
+
+ QYToolTip* QYToolTip::getInstance()
+ {
+	 if (nullptr == _instance)
+	 {
+		 _instance = new QYToolTip;
+
+		 _instance->Create();
+	 }
+
+	 return _instance;
+ }
 
 QYToolTip::QYToolTip() :QYWindow()
 {
