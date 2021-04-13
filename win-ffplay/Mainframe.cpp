@@ -322,8 +322,17 @@ void CMainframe::onEvent(QYPropertyList *propertyList)
 		std::string filePath;
 		if (QYFileStudio::openFileDialog(GetHwnd(), filePath, "Media Files (.mp4;.avi;.pch;.mkv;.rmvb;.flv)\0*.mp4;*.avi;*.pch;*.mkv;*.rmvb;*.flv;\0All Files (*.*)\0*.*;\0"))
 		{
+			if (ffplayIsPlaying())
+			{
+				QYPropertyList properties;
+				properties.addProperty("id", "stop");
+				onEvent(&properties);
+			}
+			
+
 			if (playFile(filePath))
 			{
+				
 				_play->setImage("replay_pause.png");
 			}
 			

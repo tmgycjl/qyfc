@@ -1383,7 +1383,7 @@ static void video_image_display(VideoState *is)
 	}
 
 	
-    if (!vp->uploaded) {
+    if (!vp->uploaded || is->paused) {
 		if (_useSDLRender)
 		{
 			if (upload_texture(&is->vid_texture, vp->frame, &is->img_convert_ctx) < 0)
@@ -4015,6 +4015,9 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
 		}
 		else if (is->paused &&!_useSDLRender)
 		{
+			video_image_display(is);
+#if 0
+
 			if (RENDER_TYPE_D3D == _renderType && NULL != _d3d)
 			{
 				d3dRenderInternal(_d3d);
@@ -4027,6 +4030,8 @@ static void refresh_loop_wait_event(VideoState *is, SDL_Event *event) {
 			{
 				ddrawRenderInternal(_ddraw);
 			}
+
+#endif
 		}
         SDL_PumpEvents();
     }
@@ -4526,6 +4531,9 @@ static UINT  thread_play(LPVOID lpvoid)
 	}
 
 	_playing = 0;
+	_playPause = 0;
+	_totalTime = 0;
+	_playTime = 0;
 
 	return 0;
 }
