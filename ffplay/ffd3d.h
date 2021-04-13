@@ -6,6 +6,7 @@ typedef struct
 {
 	LPDIRECT3D9             m_pD3D;
 	LPDIRECT3DDEVICE9       m_pd3dDevice;
+	IDirect3DSurface9 *     _backBufferSurface;
 	LPDIRECT3DTEXTURE9      m_pTexturesvideo;
 	LPDIRECT3DVERTEXBUFFER9 m_pVBvideo;		
 	LPDIRECT3DTEXTURE9      m_pTexturesbmp;
