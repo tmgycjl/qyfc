@@ -561,7 +561,10 @@ static int packet_queue_init(PacketQueue *q)
 static void packet_queue_flush(PacketQueue *q)
 {
     MyAVPacketList *pkt, *pkt1;
-
+	if (NULL == q)
+	{
+		return;
+	}
     SDL_LockMutex(q->mutex);
     for (pkt = q->first_pkt; pkt; pkt = pkt1) {
         pkt1 = pkt->next;
@@ -585,13 +588,17 @@ static void packet_queue_destroy(PacketQueue *q)
 
 static void packet_queue_abort(PacketQueue *q)
 {
-    SDL_LockMutex(q->mutex);
+	if (NULL != q)
+	{
+		SDL_LockMutex(q->mutex);
 
-    q->abort_request = 1;
+		q->abort_request = 1;
 
-    SDL_CondSignal(q->cond);
+		SDL_CondSignal(q->cond);
 
-    SDL_UnlockMutex(q->mutex);
+		SDL_UnlockMutex(q->mutex);
+	}
+   
 }
 
 static void packet_queue_start(PacketQueue *q)
