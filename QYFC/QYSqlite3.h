@@ -1,5 +1,6 @@
 #pragma once
 
+#if 0
 
 
 #define  _USED_IN_WINXP   1
@@ -62,3 +63,4 @@ private:
 	sqlite3 *m_DB;
 };
 
+#endif

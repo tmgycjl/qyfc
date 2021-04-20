@@ -1,6 +1,7 @@
 ﻿#include "QYSqlite3.h"
 #include "QYString.h"
 
+#if 0
 
 
 #ifndef _USED_IN_WINXP
@@ -213,3 +214,6 @@ void QYSqlite3::FreeTable(char **dbResult)
 {
 	return sqlite3_free_table(dbResult);
 }
+
+
+#endif

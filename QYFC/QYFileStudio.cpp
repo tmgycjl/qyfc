@@ -246,8 +246,8 @@ BOOL QYFileStudio::browseForFolder(HWND hWnd, std::string &folderName, unsigned 
 	BROWSEINFOA bInfo = { 0 };
 	bInfo.hwndOwner = hWnd;
 	bInfo.lpszTitle = title;
-	bInfo.ulFlags = flags; 
-		LPITEMIDLIST lpDlist;
+	bInfo.ulFlags = flags;
+	LPITEMIDLIST lpDlist;
 	lpDlist = SHBrowseForFolderA(&bInfo);
 	if (lpDlist != NULL)
 	{

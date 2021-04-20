@@ -56,3 +56,5 @@
 
 	FFPLAY_DLLAPI int ffplayWriteMyMediaFile(const char *filePath,const  char *outPath);
 
+	FFPLAY_DLLAPI int ffplayDecodeImage(const char *input, const unsigned int inputSize, char **output,int *w,int *h);
+

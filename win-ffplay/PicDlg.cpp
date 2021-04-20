@@ -136,22 +136,29 @@ void PicDlg::onEvent(QYPropertyList *propertyList)
 				if (nullptr != strstr(text.c_str(),".pchp"))
 				{
 					char *streamBuffer = nullptr;
+					
 					int readLen = 0;
 					if (0 <  (readLen = myMediaPicRead(text.c_str(), &streamBuffer)))
 					{
-						pic->Load((BYTE*)streamBuffer, readLen);
-						SAFE_DELETE_ARRAY(streamBuffer);
+						char *outRGB = nullptr;
+						int w = 0;
+						int h = 0;
+
+						ffplayDecodeImage(streamBuffer, readLen, &outRGB,&w,&h);
+						QYPicture *pic = new QYPicture();
+						pic->LoadRGB((unsigned char*)outRGB, w, h, QY_BGR);
+						_buttonBic->SetImage(pic);
+
+						free(outRGB);
+						free(streamBuffer);
 					}
 					
 				}
 				else
 				{
 					pic->load(text.c_str());
+					_buttonBic->SetImage(pic);
 				}
-				
-				_buttonBic->SetImage(pic);
 			}
-		
-
 	}
 }
