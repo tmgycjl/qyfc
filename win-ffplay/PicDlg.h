@@ -15,6 +15,6 @@ private:
 	QYWidgetList *_widgetList = nullptr;
 	std::string _picDir;
 	QYButton *_buttonBic = nullptr;
-	
+	QYPicture *_pic = nullptr;
 };
 

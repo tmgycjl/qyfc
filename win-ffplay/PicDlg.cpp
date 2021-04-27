@@ -37,7 +37,7 @@ PicDlg::PicDlg(QYPropertyList *properties) :QYDialog()
 
 PicDlg::~PicDlg()
 {
-
+	SAFE_DELETE(_pic);
 }
 
 BOOL PicDlg::OnInitDialog()
@@ -106,6 +106,10 @@ LRESULT PicDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			_buttonBic->MoveWindow(rcClient.left + rcTree.Width() + 5,rcClient.top+5,rcClient.Width() - rcTree.Width()-10,rcClient.Height()-10);
 		}
 	}
+	else if (WM_KEYDOWN == message)
+	{
+		
+	}
 	return QYDialog::WindowProc(message, wParam, lParam);
 }
 
@@ -145,15 +149,51 @@ void PicDlg::onEvent(QYPropertyList *propertyList)
 						int h = 0;
 
 						ffplayDecodeImage(streamBuffer, readLen, &outRGB,&w,&h);
-						QYPicture *pic = new QYPicture();
-						pic->LoadRGB((unsigned char*)outRGB, w, h, QY_BGR);
-						_buttonBic->SetImage(pic);
+						_pic = new QYPicture();
+						_pic->LoadRGB((unsigned char*)outRGB, w, h, QY_BGR);
+						_buttonBic->SetImage(_pic);
 
 						free(outRGB);
 						free(streamBuffer);
 					}
 					
 				}
+#if 0
+
+
+				else if (nullptr != strstr(text.c_str(), ".jpg"))
+				{
+					int readLen = 0;
+					char *streamBuffer = nullptr;
+
+					FILE *pFile = nullptr;
+					if (0 == fopen_s(&pFile, text.c_str(),"rb"))
+					{
+						fseek(pFile, 0, SEEK_END);
+						int fileSize = ftell(pFile);
+						streamBuffer = new char[fileSize+1];
+
+						fseek(pFile, 0, SEEK_SET);
+
+						readLen = fread(streamBuffer, 1, fileSize, pFile);
+
+						char *outRGB = nullptr;
+						int w = 0;
+						int h = 0;
+
+						ffplayDecodeImage(streamBuffer, readLen, &outRGB, &w, &h);
+						_pic = new QYPicture();
+						_pic->LoadRGB((unsigned char*)outRGB, w, h, QY_BGR);
+						_buttonBic->SetImage(_pic);
+
+						free(outRGB);
+						SAFE_DELETE_ARRAY(streamBuffer);
+
+						fclose(pFile);
+					}
+
+				}
+#endif
 				else
 				{
 					pic->load(text.c_str());

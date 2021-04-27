@@ -417,10 +417,8 @@ BOOL QYButton::setImage(const char *imagePath,int state)
 
 BOOL QYButton::SetImage(QYPicture *pImage)
 {
-	if (nullptr != m_pImage)
-	{
-		SAFE_DELETE(m_pImage);
-	}
+	SAFE_DELETE(m_pImage);
+	
 	m_pImage = pImage;
 	Invalidate();
 

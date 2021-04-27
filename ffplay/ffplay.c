@@ -5135,21 +5135,19 @@ int ffplayDecodeImage(const char *input, const unsigned int inputSize, char **ou
 		{
 			if (0 == avcodec_open2(cc, codec, NULL))
 			{
-				AVPacket pkt;
-				av_init_packet(&pkt);
-				pkt.data = input;
-				pkt.size = inputSize;
-				avcodec_send_packet(cc, &pkt);
+				AVPacket *pkt = av_packet_alloc();
+				av_init_packet(pkt);
+				pkt->data = input;
+				pkt->size = inputSize;
+				avcodec_send_packet(cc, pkt);
+				av_packet_unref(pkt);
 
 				AVFrame *pic = av_frame_alloc();
 
 				if (0 == avcodec_receive_frame(cc, pic))
 				{
-					FFD3D d3d;
-					memset(&d3d, 0, sizeof(FFD3D));
-
 					struct SwsContext *img_convert_ctx = sws_getContext(pic->width, pic->height, pic->format, pic->width, pic->height,
-						AV_PIX_FMT_BGR24, sws_flags, NULL, NULL, NULL);
+						AV_PIX_FMT_RGB24, sws_flags, NULL, NULL, NULL);
 					if (img_convert_ctx != NULL)
 					{
 						*w = pic->width;
@@ -5157,27 +5155,25 @@ int ffplayDecodeImage(const char *input, const unsigned int inputSize, char **ou
 
 						*output = (char*)malloc(pic->width * pic->height * 3);
 
-						uint8_t *pixels[4];
-
-						pixels[0] = *output + pic->width * pic->height;
-						pixels[1] = *output + 1 * pic->width * pic->height;
-						pixels[2] = *output + 2 * pic->width * pic->height;
-
 						int pitch[4] = { 0 };
+						pitch[0] = pic->width * 3;
 
 						sws_scale(img_convert_ctx, (const uint8_t * const *)pic->data, pic->linesize,
-							0, pic->height, pixels, pitch);
+							0, pic->height, (uint8_t*const*)output, pitch);
 
 						sws_freeContext(img_convert_ctx);
 					}
 					
 				}
 
+				av_frame_free(&pic);
+
 				avcodec_close(cc);
-
-				avcodec_free_context(cc);
-
-				av_free(pic);
+				av_free(cc);
+			}
+			else
+			{
+				av_free(cc);
 			}
 		}
 	}

@@ -11,8 +11,6 @@
 #include <vector>
 #include <iostream>
 #include <map>
-
-
 #include <queue>
 
 SettingDlg::SettingDlg() :QYDialog()
@@ -75,10 +73,8 @@ BOOL SettingDlg::OnInitDialog()
 	return TRUE;
 }
 
-
 LRESULT SettingDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-
 	return QYDialog::WindowProc(message, wParam, lParam);
 }
 
@@ -96,7 +92,6 @@ void SettingDlg::onEvent(QYPropertyList *propertyList)
 		{
 			QYIniFile iniFile(QYApp::GetAppPath() + CONFIG_INI);
 			iniFile.Write_int(L"setting",L"render",render->GetCurSel());
-
 			
 			EndDialog(IDCANCEL);
 		}
