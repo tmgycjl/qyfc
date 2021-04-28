@@ -3535,7 +3535,7 @@ static int read_thread(void *arg)
         scan_all_pmts_set = 1;
     }
     err = avformat_open_input(&ic, is->filename, is->iformat, &format_opts);
-    if (err < 0  || ic->streams[0]->duration < 0)
+    if (err < 0  )
 	{
 		if (!myMediaFileOpen(&myMediaoFile,is->filename,0,NULL))
 		{
