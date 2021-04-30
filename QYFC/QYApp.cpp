@@ -164,14 +164,18 @@ BOOL QYApp::InitInstance(HINSTANCE hInstance,
 
 	m_pDlgFont = new QYFont;
 	m_pDlgFont->CreateFont(m_ThemeStruct.DLG_FONT_SIZE, 0, FW_NORMAL, m_ThemeStruct.DLG_FONT_TYPE);
+	LOGFONT lf;
+	SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &lf, 0);
 	m_pMsDefultFont = new QYFont;
-	m_pMsDefultFont->CreateFont(m_textMetric.tmHeight, 0, m_textMetric.tmWeight, m_ThemeStruct.MS_YAHEI_FONT_TYPE);
+	m_pMsDefultFont->CreateFont(lf.lfHeight, lf.lfWidth, lf.lfWeight, lf.lfFaceName);
 	m_pCaptionFont = new QYFont;
 	m_pCaptionFont->CreateFont(m_textMetric.tmHeight, 0, m_textMetric.tmWeight, m_ThemeStruct.CAPTION_FONT_TYPE);
 	m_dlg_static_brush = ::CreateSolidBrush(m_ThemeStruct.CLIENT_COLOR);
 	m_dlg_edit_brush = ::CreateSolidBrush(m_ThemeStruct.EDIT_BK_COLOR_NORMAL);
 	m_dlg_edit_readonly_brush = ::CreateSolidBrush(m_ThemeStruct.EDIT_BK_COLOR_READONLY);
 	m_bkBrush = ::CreateSolidBrush(m_ThemeStruct.CLIENT_COLOR);
+
+	QYToolTip::getInstance();
 
 	QYLinearBitmap::InitGlobalLinearRgb();
 

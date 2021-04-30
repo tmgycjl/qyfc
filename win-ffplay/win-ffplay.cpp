@@ -22,23 +22,13 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
-#if 0
-	_CrtSetBreakAlloc(116);
-
-	_CrtMemState s1, s2, s3;
-
-	_CrtMemCheckpoint(&s1);
-
-#endif // DEBUG
 
 	CoInitialize(nullptr);
 
 	app = CApp::instance();
 
-
 	app->InitTheme();
 	app->InitInstance(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
-
 
 	CApp::bindLayoutPath(std::string(CApp::getAppPath() + "../../layout\\").c_str());
 	CApp::bindImagePath(std::string(CApp::getAppPath() + "../../image\\").c_str());
@@ -53,14 +43,12 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 #endif
 	QYImageManager::instance()->loadImages(CApp::m_imagePath + "image.dat");
 
-
 	CMainframe *pMainWindow = CMainframe::instance();
 
 	app->SetMainWindow(pMainWindow);
 	pMainWindow->ShowShadow(TRUE);
 	pMainWindow->SetIcon(IDI_SMALL);
 	pMainWindow->DoModal();
-
 
 	SAFE_DESTROY_WINDOW_PTR(pMainWindow);
 

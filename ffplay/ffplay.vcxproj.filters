@@ -47,19 +47,19 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="cmdutils.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ffd3d.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ffddraw.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ffd3d11.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="ffplay.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ffd3d11.cpp">
+    <ClCompile Include="cmdutils.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

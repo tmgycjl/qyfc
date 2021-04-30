@@ -213,7 +213,7 @@ QYWindow::QYWindow(void)
 	m_disableMinBox = TRUE;
 	m_bSizeBox = FALSE;
 
-	if (nullptr != QYApp::m_pDlgFont)
+	if (nullptr != QYApp::m_pMsDefultFont)
 	{
 		m_pFont->m_hObject = QYApp::m_pMsDefultFont->m_hObject;
 	}
